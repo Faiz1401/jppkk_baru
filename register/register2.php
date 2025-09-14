@@ -106,6 +106,10 @@ $conn->close();
             <input type="text" id="name" name="name" placeholder="Full Name" required>
           </div>
           <div class="input-group">
+            <label for="gred">Gred</label>
+            <input type="text" id="gred" name="gred" placeholder="Enter your grade" required>
+          </div>
+          <div class="input-group">
             <label for="noIC">IC Number</label>
             <input type="text" id="noIC" name="noIC" placeholder="Enter your IC number" required>
           </div>
@@ -117,7 +121,7 @@ $conn->close();
             <label for="phone">Phone Number</label>
             <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
           </div>
-          <div class="input-group full-width">
+          <div class="input-group">
             <label for="religion">Religion</label>
             <select id="religion" name="religion" required>
               <option value="">--Select Religion--</option>
@@ -171,20 +175,59 @@ $conn->close();
           </div>
             <div class="input-group">
             <label for="program">Program</label>
-            <select id="program" name="program" required>
-                <option value="">-- Pilih Program --</option>
-                <?php
-                include 'db_connection.php';
-                $sql = "SELECT KODPROGRAM, NAMAPROGRAM FROM tblprogram";
-                $res = $conn->query($sql);
-                if ($res && $res->num_rows > 0) {
-                    while ($row = $res->fetch_assoc()) {
-                        echo "<option value='".$row['KODPROGRAM']."'>".$row['NAMAPROGRAM']."</option>";
-                    }
-                }
-                ?>
-            </select>
+              <select id="program" name="program" required onchange="toggleProgramForm(this)">
+                  <option value="">-- Pilih Program --</option>
+                  <?php
+                  include 'db_connection.php';
+                  $sql = "SELECT KODPROGRAM, NAMAPROGRAM FROM tblprogram";
+                  $res = $conn->query($sql);
+                  if ($res && $res->num_rows > 0) {
+                      while ($row = $res->fetch_assoc()) {
+                          // Display "KODPROGRAM - NAMAPROGRAM", value tetap KODPROGRAM
+                          echo "<option value='" . $row['KODPROGRAM'] . "'>" . $row['KODPROGRAM'] . " - " . $row['NAMAPROGRAM'] . "</option>";
+                      }
+                  }
+                  ?>
+                  <option value="new">+ Tambah Program Baru</option>
+              </select>
             </div>
+            <!-- Borang Tambah Program Baru (hidden by default) -->
+            <div id="newProgramForm" style="display:none; grid-column:span 2; border:1px solid #ccc; padding:15px; margin-top:10px; border-radius:5px;">
+              <h3>Tambah Program Baru</h3>
+              <div class="input-group">
+                <label for="jenisProgram">Jenis Program</label>
+                <input type="text" id="jenisProgram" name="jenisProgram">
+              </div>
+              <div class="input-group">
+                <label for="kodProgram">Kod Program</label>
+                <input type="text" id="kodProgram" name="kodProgram">
+              </div>
+              <div class="input-group">
+                <label for="namaProgram">Nama Program</label>
+                <input type="text" id="namaProgram" name="namaProgram">
+              </div>
+              <div class="input-group">
+                <label for="bilKursus">Bilangan Kursus</label>
+                <input type="number" id="bilKursus" name="bilKursus">
+              </div>
+              <div class="input-group">
+                <label for="necCode">NEC Code</label>
+                <input type="number" id="necCode" name="necCode">
+              </div>
+              <div class="input-group">
+                <label for="akreditasi">Akreditasi</label>
+                <input type="text" id="akreditasi" name="akreditasi">
+              </div>
+              <div class="input-group">
+                <label for="versi">Versi</label>
+                <input type="text" id="versi" name="versi">
+              </div>
+              <div class="input-group">
+                <label for="tempoh">Tempoh Pengajian</label>
+                <input type="number" id="tempoh" name="tempoh">
+              </div>
+            </div>
+
           <div class="input-group">
             <label for="appointmentDate">Appointment Date</label>
             <input type="date" id="appointmentDate" name="appointmentDate" required>
@@ -216,6 +259,18 @@ $conn->close();
   </div>
 
   <script>
+        function toggleProgramForm(select) {
+      const form = document.getElementById("newProgramForm");
+      if (select.value === "new") {
+        form.style.display = "grid";
+        // Make required
+        document.querySelectorAll("#newProgramForm input").forEach(inp => inp.setAttribute("required","true"));
+      } else {
+        form.style.display = "none";
+        // Remove required
+        document.querySelectorAll("#newProgramForm input").forEach(inp => inp.removeAttribute("required"));
+      }
+    }
     const steps = document.querySelectorAll(".form-step");
     const nextBtns = document.querySelectorAll(".btn-next");
     const prevBtns = document.querySelectorAll(".btn-prev");

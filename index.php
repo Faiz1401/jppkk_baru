@@ -74,7 +74,7 @@
                 <button type="submit">Sign In</button>
             </form>
 
-            <p>New here? <a href="register/register.html">Create an Account</a></p>
+            <p>New here? <a href="register/register2.php">Create an Account</a></p>
         </div>
     </div>
 
