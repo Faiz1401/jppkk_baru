@@ -1,341 +1,296 @@
+<?php
+include 'db_connection.php';
+
+// ambil data bidang
+$bidangOptions = [];
+$sql = "SELECT IDBIDANGBK, NAMABIDANGBK FROM tblbidang";
+$result = $conn->query($sql);
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $bidangOptions[] = $row;
+    }
+}
+$conn->close();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration Form</title>
-    <style>
-        /* Basic Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Form</title>
+  <style>
+    * {margin:0;padding:0;box-sizing:border-box;}
+    body {font-family: Arial, sans-serif;background-color:#f4f4f4;}
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-        }
+    .container {display:flex;justify-content:space-between;padding:20px;min-height:100vh;flex-wrap:wrap;}
+    .left-side {background-color:#8e44ad;color:white;width:40%;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:50px;}
+    .left-side h1 {font-size:2.5rem;}
+    .left-side p {font-size:1.2rem;}
+    .right-side {width:60%;padding:50px;background:white;display:flex;flex-direction:column;}
 
-        /* General Container Layout */
-        .container {
-            display: flex;
-            justify-content: space-between;
-            padding: 20px;
-            min-height: 100vh;
-            flex-wrap: wrap;
-        }
+    .right-side h2 {font-size:2rem;margin-bottom:20px;grid-column:span 2;}
 
-        /* Left Side Section (Background Purple) */
-        .left-side {
-            background-color: #8e44ad;
-            color: white;
-            width: 40%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 50px;
-        }
+    form {display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+    .input-group {display:flex;flex-direction:column;width:100%;}
+    .input-group.full-width {grid-column:span 2;}
+    label {font-size:1rem;margin-bottom:5px;}
+    input,select {padding:12px;border-radius:5px;border:1px solid #ccc;font-size:1rem;width:100%;}
 
-        .left-side h1 {
-            font-size: 2.5rem;
-        }
+    .gender {display:flex;flex-direction:column;gap:10px;}
+    .gender label {font-weight:bold;margin-bottom:10px;}
+    .gender input[type="radio"] {display:none;}
+    .gender div {display:flex;gap:15px;}
+    .gender input[type="radio"]+label {padding:10px 20px;background:#f0f0f0;border-radius:50px;cursor:pointer;transition:0.3s;}
+    .gender input[type="radio"]:checked+label {background:#8e44ad;color:white;}
+    .gender input[type="radio"]:hover+label {background:#b16bde;}
 
-        .left-side p {
-            font-size: 1.2rem;
-        }
+    button {padding:12px 20px;background:#8e44ad;color:white;font-size:1rem;border:none;border-radius:5px;cursor:pointer;}
+    button:hover {background:#732d91;}
+    button[type="submit"] {padding:18px 20px;font-size:1.2rem;border-radius:10px;grid-column:span 2;}
+    .btn-submit {background:#3498db;}
+    .btn-submit:hover {background:#2980b9;}
 
-        /* Right Side Section (White Background) */
-        .right-side {
-            width: 60%;
-            padding: 50px;
-            background-color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-        }
+    /* Disabled state */
+    .btn-disabled {
+      background:#ccc !important;
+      color:#666 !important;
+      cursor:not-allowed !important;
+    }
 
-        .right-side h2 {
-            font-size: 2rem;
-            margin-bottom: 20px;
-        }
+    .form-navigation {display:flex;justify-content:space-between;grid-column:span 2;}
 
-        /* Form Layout for Side by Side Inputs */
-        .right-side form {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: space-between;
-        }
+    @media screen and (max-width:768px){
+      .container{flex-direction:column;}
+      .left-side,.right-side{width:100%;} 
+      form{grid-template-columns:1fr;}
+      .form-navigation{flex-direction:column;gap:10px;}
+      button{width:100%;}
+    }
 
-        /* Label Styling */
-        .right-side label {
-            font-size: 1rem;
-            margin-bottom: 5px;
-            display: block;
-        }
+    .form-step {display:none;grid-column:span 2;}
+    .form-step.active {display:contents;}
 
-        /* General Input Styling */
-        .right-side input,
-        .right-side select {
-            padding: 12px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-size: 1rem;
-            width: 100%;
-        }
+    .confirmation {display:flex;align-items:center;gap:10px;font-size:1rem;}
 
-        /* Grouping the input fields for side-by-side display */
-        .right-side .input-group {
-            display: flex;
-            flex-direction: column;
-            width: 48%; /* Adjust to 48% for better alignment */
-        }
-
-        /* Gender Section */
-        .gender {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 15px;
-            gap: 10px; /* Adds space between radio buttons */
-        }
-
-        .gender label {
-            font-size: 1rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .gender input[type="radio"] {
-            display: none; /* Hide the default radio button */
-        }
-
-        .gender div {
-            display: flex;
-            gap: 15px;
-        }
-
-        .gender input[type="radio"] + label {
-            padding: 10px 20px;
-            background-color: #f0f0f0;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .gender input[type="radio"]:checked + label {
-            background-color: #8e44ad;
-            color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .gender input[type="radio"]:hover + label {
-            background-color: #b16bde;
-        }
-
-        /* Buttons Styling */
-        .right-side button {
-            padding: 10px;
-            background-color: #8e44ad;
-            color: white;
-            font-size: 1rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-
-        .right-side button:hover {
-            background-color: #732d91;
-        }
-
-        /* Submit Button Styling */
-        .right-side button[type="submit"] {
-            background-color: #3498db;  /* Bright blue color */
-            padding: 18px 20px;  /* Increase padding for a larger button */
-            font-size: 1.2rem;  /* Slightly larger font size */
-            border-radius: 10px;  /* Rounded corners for a smooth look */
-            margin-top: 20px;
-            width: 100%;  /* Full width for a consistent design */
-            cursor: pointer;
-            transition: all 0.3s ease;  /* Smooth transition on hover */
-        }
-
-        .right-side button[type="submit"]:hover {
-            background-color: #2980b9;
-        }
-
-        /* Media Queries for Responsive Design */
-        @media screen and (max-width: 768px) {
-            .container {
-                flex-direction: column;
-                height: auto;
-            }
-
-            .left-side, .right-side {
-                width: 100%;
-            }
-
-            .right-side form {
-                padding: 20px;
-            }
-
-            .right-side .input-group {
-                width: 100%; /* Stack vertically on small screens */
-            }
-
-            .right-side button {
-                width: 100%;
-            }
-
-            .gender {
-                flex-direction: column; /* Stack gender options vertically */
-                align-items: flex-start;
-            }
-        }
-
-        /* Hidden Steps */
-        .form-step {
-            display: none;
-        }
-
-        .form-step.active {
-            display: block;
-        }
-    </style>
+    /* Error Box */
+    .error-box {
+      grid-column: span 2;
+      background:#ffdddd;
+      color:#a94442;
+      border:1px solid #a94442;
+      padding:10px;
+      border-radius:5px;
+      display:none;
+    }
+  </style>
 </head>
 <body>
-
-    <div class="container">
-        <!-- Left Panel -->
-        <div class="left-side">
-            <h1>Join Us Today</h1>
-            <p>Fill out this form to get started with your account.</p>
-        </div>
-
-        <!-- Right Panel -->
-        <div class="right-side">
-            <form id="registrationForm">
-                <!-- Step 1 -->
-                <div class="form-step active">
-                    <h2>Step 1: Personal Information</h2>
-
-                    <!-- Step 1 Inputs -->
-                    <div class="input-group">
-                        <label for="name">Full Name</label>
-                        <input type="text" id="name" placeholder="Full Name" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" placeholder="Email Address" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="phone">Phone Number</label>
-                        <input type="text" id="phone" placeholder="Phone Number" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="address">Address</label>
-                        <input type="text" id="address" placeholder="Your Address" required>
-                    </div>
-
-                    <!-- Gender Section -->
-                    <div class="gender">
-                        <label>Gender</label>
-                        <div>
-                            <input type="radio" id="male" name="gender" value="Male" required>
-                            <label for="male">Male</label>
-                            <input type="radio" id="female" name="gender" value="Female">
-                            <label for="female">Female</label>
-                        </div>
-                    </div>
-
-                    <!-- Step Navigation -->
-                    <button type="button" class="btn-next">Next Step →</button>
-                </div>
-
-                <!-- Step 2 -->
-                <div class="form-step">
-                    <h2>Step 2: Address Information</h2>
-
-                    <div class="input-group">
-                        <label for="street">Street</label>
-                        <input type="text" id="street" placeholder="Street" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="city">City</label>
-                        <input type="text" id="city" placeholder="City" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="postcode">Postcode</label>
-                        <input type="text" id="postcode" placeholder="Postcode" required>
-                    </div>
-                    <button type="button" class="btn-prev">← Previous</button>
-                    <button type="button" class="btn-next">Next Step →</button>
-                </div>
-
-                <!-- Step 3 -->
-                <div class="form-step">
-                    <h2>Step 3: Account Information</h2>
-
-                    <div class="input-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" placeholder="Username" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" placeholder="Password" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="confirm_password">Confirm Password</label>
-                        <input type="password" id="confirm_password" placeholder="Confirm Password" required>
-                    </div>
-                    <button type="button" class="btn-prev">← Previous</button>
-                    <button type="submit" class="btn-submit">Submit</button>
-                </div>
-
-            </form>
-        </div>
+  <div class="container">
+    <!-- Left Panel -->
+    <div class="left-side">
+      <h1>Join Us Today</h1>
+      <p>Fill out this form to get started with your account.</p>
     </div>
 
-    <script>
-        // JavaScript to handle form navigation
-        const nextBtns = document.querySelectorAll('.btn-next');
-        const prevBtns = document.querySelectorAll('.btn-prev');
-        const steps = document.querySelectorAll('.form-step');
-        let currentStep = 0;
+    <!-- Right Panel -->
+    <div class="right-side">
+      <form id="registrationForm" action="process_register.php" method="POST">
+        <!-- Error Box -->
+        <div class="error-box" id="errorBox">⚠ Please fill in all required fields before continuing.</div>
 
-        // Function to show the current active step
-        function updateStep() {
-            steps.forEach((step, index) => {
-                step.classList.toggle('active', index === currentStep); // Show the current step
-            });
+        <!-- Step 1 -->
+        <div class="form-step active">
+          <h2>Step 1: Personal Information</h2>
+          <div class="input-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" placeholder="Full Name" required>
+          </div>
+          <div class="input-group">
+            <label for="noIC">IC Number</label>
+            <input type="text" id="noIC" name="noIC" placeholder="Enter your IC number" required>
+          </div>
+          <div class="input-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+          </div>
+          <div class="input-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+          </div>
+          <div class="input-group full-width">
+            <label for="religion">Religion</label>
+            <select id="religion" name="religion" required>
+              <option value="">--Select Religion--</option>
+              <option value="Islam">Islam</option>
+              <option value="Christianity">Christianity</option>
+              <option value="Hinduism">Hinduism</option>
+              <option value="Buddhism">Buddhism</option>
+              <option value="Sikhism">Sikhism</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="input-group full-width">
+            <div class="gender">
+              <label>Gender</label>
+              <div>
+                <input type="radio" id="male" name="gender" value="Male" required>
+                <label for="male">Male</label>
+                <input type="radio" id="female" name="gender" value="Female" required>
+                <label for="female">Female</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-navigation">
+            <button type="button" class="btn-next">Next Step →</button>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="form-step">
+          <h2>Step 2: Academic Information</h2>
+          <div class="input-group">
+            <label for="institusi">Institution</label>
+            <input type="text" id="institusi" name="institusi" placeholder="Enter your institution" required>
+          </div>
+          <div class="input-group">
+            <label for="field">Field of Study</label>
+            <select id="field" name="field" required>
+              <option value="">-- Pilih Bidang --</option>
+              <?php foreach ($bidangOptions as $opt): ?>
+                <option value="<?= $opt['IDBIDANGBK'] ?>"><?= $opt['NAMABIDANGBK'] ?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="subField">Sub Field</label>
+            <input type="text" id="subField" name="subField" placeholder="Enter your sub field" required>
+          </div>
+          <div class="input-group">
+            <label for="department">Department</label>
+            <input type="text" id="department" name="department" placeholder="Enter your department" required>
+          </div>
+            <div class="input-group">
+            <label for="program">Program</label>
+            <select id="program" name="program" required>
+                <option value="">-- Pilih Program --</option>
+                <?php
+                include 'db_connection.php';
+                $sql = "SELECT KODPROGRAM, NAMAPROGRAM FROM tblprogram";
+                $res = $conn->query($sql);
+                if ($res && $res->num_rows > 0) {
+                    while ($row = $res->fetch_assoc()) {
+                        echo "<option value='".$row['KODPROGRAM']."'>".$row['NAMAPROGRAM']."</option>";
+                    }
+                }
+                ?>
+            </select>
+            </div>
+          <div class="input-group">
+            <label for="appointmentDate">Appointment Date</label>
+            <input type="date" id="appointmentDate" name="appointmentDate" required>
+          </div>
+          <div class="input-group">
+            <label for="retirementDate">Retirement Date</label>
+            <input type="date" id="retirementDate" name="retirementDate" required>
+          </div>
+          <div class="form-navigation">
+            <button type="button" class="btn-prev">← Previous</button>
+            <button type="button" class="btn-next">Next Step →</button>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="form-step">
+          <h2>Step 3: Confirmation</h2>
+          <div class="input-group full-width confirmation">
+            <input type="checkbox" id="confirmation">
+            <label for="confirmation">Saya mengesahkan segala maklumat yang diisikan adalah benar.</label>
+          </div>
+          <div class="form-navigation">
+            <button type="button" class="btn-prev">← Previous</button>
+            <button type="submit" id="submitBtn" class="btn-submit btn-disabled" disabled>Submit</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const steps = document.querySelectorAll(".form-step");
+    const nextBtns = document.querySelectorAll(".btn-next");
+    const prevBtns = document.querySelectorAll(".btn-prev");
+    const errorBox = document.getElementById("errorBox");
+    const confirmation = document.getElementById("confirmation");
+    const submitBtn = document.getElementById("submitBtn");
+    let currentStep = 0;
+
+    function updateStep() {
+      steps.forEach((step, index) => {
+        step.classList.toggle("active", index === currentStep);
+      });
+    }
+
+    function validateStep(stepIndex) {
+      const inputs = steps[stepIndex].querySelectorAll("input, select");
+      let valid = true;
+      inputs.forEach(input => {
+        input.style.border = "1px solid #ccc"; // reset
+        if (input.hasAttribute("required")) {
+          if (input.type === "radio") {
+            const radios = steps[stepIndex].querySelectorAll(`input[name="${input.name}"]`);
+            if (![...radios].some(r => r.checked)) {
+              valid = false;
+            }
+          } else if (!input.value.trim()) {
+            valid = false;
+            input.style.border = "1px solid red";
+          }
         }
+      });
+      return valid;
+    }
 
-        // Handle "Next Step" button click
-        nextBtns.forEach((btn) => {
-            btn.addEventListener('click', () => {
-                if (currentStep < steps.length - 1) {
-                    currentStep++; // Increment to next step
-                    updateStep(); // Update the active step
-                }
-            });
-        });
+    nextBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (!validateStep(currentStep)) {
+          errorBox.style.display = "block";
+        } else {
+          errorBox.style.display = "none";
+          currentStep++;
+          updateStep();
+        }
+      });
+    });
 
-        // Handle "Previous Step" button click
-        prevBtns.forEach((btn) => {
-            btn.addEventListener('click', () => {
-                if (currentStep > 0) {
-                    currentStep--; // Decrement to previous step
-                    updateStep(); // Update the active step
-                }
-            });
-        });
-
-        // Initialize with the first step visible
+    prevBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        errorBox.style.display = "none";
+        currentStep--;
         updateStep();
-    </script>
+      });
+    });
 
+    // Enable/disable submit based on checkbox
+    confirmation.addEventListener("change", () => {
+      if (confirmation.checked) {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove("btn-disabled");
+      } else {
+        submitBtn.disabled = true;
+        submitBtn.classList.add("btn-disabled");
+      }
+    });
+
+    document.getElementById("registrationForm").addEventListener("submit", (e) => {
+      if (!validateStep(currentStep)) {
+        e.preventDefault();
+        errorBox.style.display = "block";
+      } else {
+        errorBox.style.display = "none";
+      }
+    });
+
+    updateStep();
+  </script>
 </body>
 </html>
