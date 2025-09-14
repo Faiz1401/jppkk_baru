@@ -19,10 +19,10 @@ function sendTempPassword($toEmail, $temp_pass, $name) {
     $mail = new PHPMailer(true);
     try {
         $mail->isSMTP();
-        $mail->Host       = 'smtp.example.com'; // ganti dengan SMTP server sebenar
+        $mail->Host       = 'smtp.gmail.com'; // ganti dengan SMTP server sebenar
         $mail->SMTPAuth   = true;
         $mail->Username   = 'faizrazak1401@gmail.com'; // email dari mana
-        $mail->Password   = 'lptofvkqvtiizatm'; // app password Gmail
+        $mail->Password   = 'rtmjoiaavkfapext'; // app password Gmail
         $mail->SMTPSecure = 'tls';
         $mail->Port       = 587;
 
