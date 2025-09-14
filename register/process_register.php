@@ -19,10 +19,10 @@ function sendTempPassword($toEmail, $temp_pass, $name) {
     $mail = new PHPMailer(true);
     try {
         $mail->isSMTP();
-        $mail->Host       = 'smtp.gmail.com'; // ganti dengan SMTP server sebenar
+        $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'faizrazak1401@gmail.com'; // email dari mana
-        $mail->Password   = 'rtmjoiaavkfapext'; // app password Gmail
+        $mail->Username   = 'faizrazak1401@gmail.com';
+        $mail->Password   = 'rtmjoiaavkfapext';
         $mail->SMTPSecure = 'tls';
         $mail->Port       = 587;
 
@@ -46,23 +46,25 @@ function sendTempPassword($toEmail, $temp_pass, $name) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Collect data
-    $no_ic      = $_POST['noIC'] ?? null;
-    $name       = $_POST['name'] ?? null;
-    $gred       = $_POST['gred'] ?? null;
-    $jantina    = $_POST['gender'] ?? null;
-    $agama      = $_POST['religion'] ?? null;
-    $institusi  = $_POST['institusi'] ?? null;
-    $bidang     = $_POST['field'] ?? null;
-    $subbidang  = $_POST['subField'] ?? null;
-    $jabatan    = $_POST['department'] ?? null;
-    $program    = $_POST['program'] ?? null;
-    $tarikh_l   = $_POST['appointmentDate'] ?? null;
-    $tarikh_p   = $_POST['retirementDate'] ?? null;
-    $email      = $_POST['email'] ?? null;
-    $phone      = $_POST['phone'] ?? null;
+    $noIC          = $_POST['noIC'] ?? null;
+    $name           = $_POST['name'] ?? null;
+    $dob            = $_POST['dob'] ?? null;
+    $retirementDate = $_POST['retirementDate'] ?? null;
+    $email          = $_POST['email'] ?? null;
+    $phone          = $_POST['phone'] ?? null;
+    $religion       = $_POST['religion'] ?? null;
+    $gender         = $_POST['gender'] ?? null;
+    $institusi      = $_POST['institusi'] ?? null;
+    $alamat         = $_POST['alamat'] ?? null;
+    $alamatInstitusi= $_POST['alamatInstitusi'] ?? null;
+    $jawatan        = $_POST['department'] ?? null;
+    $gred           = $_POST['gred'] ?? null;
+    // Ambil jawatan & gred dari form
+    $jawatan_id = $_POST['jawatan'] ?? null; // department = dropdown jawatan
+    $gred_id    = $_POST['gred'] ?? null;       // gred = dropdown gred
 
     // Validate required fields
-    if (!$no_ic || !$name || !$gred || !$jantina || !$agama || !$institusi || !$bidang || !$email || !$phone) {
+    if (!$noIC || !$name || !$dob || !$retirementDate || !$email || !$phone || !$religion || !$gender || !$institusi || !$alamat || !$alamatInstitusi || !$jawatan_id || !$gred_id) {
         echo '<!DOCTYPE html>
         <html lang="en">
         <head>
@@ -83,71 +85,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    // Jika user tambah program baru
-    if ($program === "new") {
-        $kodProgram = $_POST['kodProgram'] ?? null;
-        $namaProgram = $_POST['namaProgram'] ?? null;
-        $jenisProgram = $_POST['jenisProgram'] ?? null;
-        $bilKursus = $_POST['bilKursus'] ?? null;
-        $necCode = $_POST['necCode'] ?? null;
-        $akreditasi = $_POST['akreditasi'] ?? null;
-        $versi = $_POST['versi'] ?? null;
-        $tempoh = $_POST['tempoh'] ?? null;
-
-        if ($kodProgram && $namaProgram) {
-            $sqlProg = "INSERT INTO tblprogram (KODPROGRAM, NAMAPROGRAM, JENISPROGRAM, BILKURSUS, NEC_CODE, AKREDITASI, VERSI, TEMPOH_PENGAJIAN) 
-                        VALUES (?,?,?,?,?,?,?,?)";
-            $stmtProg = $conn->prepare($sqlProg);
-            $stmtProg->bind_param("sssissss", 
-                $kodProgram, $namaProgram, $jenisProgram, $bilKursus, $necCode, $akreditasi, $versi, $tempoh
-            );
-
-            if ($stmtProg->execute()) {
-                $program = $kodProgram;
-            } else {
-                echo '<!DOCTYPE html>
-                <html lang="en">
-                <head><meta charset="UTF-8"><title>Error</title><script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script></head>
-                <body>
-                <script>
-                    Swal.fire({
-                        icon: "error",
-                        title: "Program Error",
-                        text: "❌ Error insert program: '.$stmtProg->error.'"
-                    }).then(() => { window.history.back(); });
-                </script>
-                </body></html>';
-                exit;
-            }
-            $stmtProg->close();
-        } else {
-            echo '<!DOCTYPE html>
-            <html lang="en">
-            <head><meta charset="UTF-8"><title>Error</title><script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script></head>
-            <body>
-            <script>
-                Swal.fire({
-                    icon: "warning",
-                    title: "Incomplete Program Data",
-                    text: "⚠ Kod Program dan Nama Program wajib diisi!"
-                }).then(() => { window.history.back(); });
-            </script>
-            </body></html>';
-            exit;
-        }
-    }
-
     // Generate temp password
     $temp_pass = generateTempPass();
 
     // Insert user
     $sql = "INSERT INTO tbluser 
-        (NO_IC, NAMA, GRED, JANTINA, AGAMA, INSTITUSI, BIDANG_PENGAJIAN, SUB_BIDANG, JABATAN_UNIT, PROGRAM, TARIKH_LANTIKAN, TARIKH_PENCEN, EMAIL, PHONE, TEMP_PASS)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        (NO_IC, NAMA, TARIKH_LAHIR, TARIKH_PENCEN, EMAIL, PHONE, AGAMA, JANTINA, INSTITUSI, ALAMAT, ALAMAT_INSTITUSI, IDJAWATAN, IDGRED, TEMP_PASS)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssssssssssss", 
-        $no_ic, $name, $gred, $jantina, $agama, $institusi, $bidang, $subbidang, $jabatan, $program, $tarikh_l, $tarikh_p, $email, $phone, $temp_pass
+    $stmt->bind_param("ssssssssssssss", 
+        $noIC, $name, $dob, $retirementDate, $email, $phone, $religion, $gender, $institusi, $alamat, $alamatInstitusi, $jawatan_id, $gred_id, $temp_pass
     );
 
     if ($stmt->execute()) {
@@ -168,7 +116,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 title: "Registration Successful!",
                 html: "✅ Your registration has been sent to your email.<br>Please wait for admin confirmation.<br>Your temporary password is: <strong>'.$temp_pass.'</strong>",
                 confirmButtonText: "Go to Login"
-            }).then(() => { window.location.href="../index.php"; });
+            }).then(() => { window.location.href=\"../index.php\"; });
         </script>
         </body>
         </html>';
@@ -192,7 +140,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </html>';
     }
 
-    $stmt->close();
-    $conn->close();
-}
+
+        $stmt->close();
+        $conn->close();
+    }
 ?>

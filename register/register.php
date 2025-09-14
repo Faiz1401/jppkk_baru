@@ -1,5 +1,20 @@
 <?php
 include 'db_connection.php';
+$jawatan_id = $_GET['jawatan_id'] ?? 0;
+$sql = "SELECT IDGRED, GRED FROM tblgred WHERE JAWATAN_ID = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $jawatan_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$greds = [];
+while($row = $result->fetch_assoc()){
+    $greds[] = $row;
+}
+echo json_encode($greds);
+?>
+
+<?php
+include 'db_connection.php';
 
 // ambil data bidang
 $bidangOptions = [];
@@ -37,9 +52,9 @@ $conn->close();
     input,select {padding:12px;border-radius:5px;border:1px solid #ccc;font-size:1rem;width:100%;}
 
     .gender {display:flex;flex-direction:column;gap:10px;}
-    .gender label {font-weight:bold;margin-bottom:10px;}
+    .gender label {margin-bottom:10px;}
     .gender input[type="radio"] {display:none;}
-    .gender div {display:flex;gap:15px;}
+    .gender div {font-weight:bold;display:flex;gap:15px;}
     .gender input[type="radio"]+label {padding:10px 20px;background:#f0f0f0;border-radius:50px;cursor:pointer;transition:0.3s;}
     .gender input[type="radio"]:checked+label {background:#8e44ad;color:white;}
     .gender input[type="radio"]:hover+label {background:#b16bde;}
@@ -100,39 +115,43 @@ $conn->close();
 
     <div class="right-side">
         <form id="registrationForm" action="process_register.php" method="POST">
-            <div class="error-box" id="errorBox">⚠ Please fill in all required fields before continuing.</div>
+            <div class="error-box" id="errorBox">⚠ Sila isi semua butiran dibawah.</div>
 
             <!-- Step 1 -->
             <div class="form-step active">
-                <h2>Step 1: Personal Information</h2>
+                <h2>Langkah 1: Maklumat Diri</h2>
                 <div class="input-group">
-                    <label for="name">Full Name</label>
+                    <label for="name">Nama Penuh</label>
                     <input type="text" id="name" name="name" placeholder="Full Name" required>
                 </div>
                 <div class="input-group">
-                    <label for="DOB">Tarikh Lahir</label>
-                    <input type="date" id="DOB" name="DOB" required>
+                    <label for="noIC">Kad Pengenalan</label>
+                    <input type="text" id="noIC" name="noIC" placeholder="Nombor kad pengenalan (tanpa -)" required>
+                </div>
+                <div class="input-group">
+                    <label for="dob">Tarikh Lahir</label>
+                    <input type="date" id="dob" name="dob" readonly required>
                 </div>
                 <div class="input-group">
                     <label for="retirementDate">Tarikh Bersara</label>
                     <input type="date" id="retirementDate" name="retirementDate" required>
                 </div>
                 <div class="input-group">
-                    <label for="noIC">IC Number</label>
-                    <input type="text" id="noIC" name="noIC" placeholder="Enter your IC number" required>
-                </div>
-                <div class="input-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    <input type="email" id="email" name="email" placeholder="Masukkan Email Anda" required>
                 </div>
                 <div class="input-group">
-                    <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+                    <label for="phone">Nombor Telefon</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Masukkan Nombor Telefon Anda (0123456789)" required>
+                </div>
+                <div class="input-group full-width">
+                    <label for="alamat">Alamat</label>
+                    <textarea id="alamat" name="alamat" placeholder="Masukkan Alamat" required rows="5" style="font-family: Arial, sans-serif; resize:vertical; font-size:1.1rem; padding:12px;"></textarea>
                 </div>
                 <div class="input-group">
-                    <label for="religion">Religion</label>
+                    <label for="religion">Agama</label>
                     <select id="religion" name="religion" required>
-                        <option value="">--Select Religion--</option>
+                        <option value="">--Sila Pilih Agama--</option>
                         <option value="Islam">Islam</option>
                         <option value="Christianity">Christianity</option>
                         <option value="Hinduism">Hinduism</option>
@@ -143,17 +162,17 @@ $conn->close();
                 </div>
                 <div class="input-group full-width">
                     <div class="gender">
-                        <label>Gender</label>
+                        <label>Jantina</label>
                         <div>
                             <input type="radio" id="male" name="gender" value="Male" required>
-                            <label for="male">Male</label>
+                            <label for="male">Lelaki</label>
                             <input type="radio" id="female" name="gender" value="Female" required>
-                            <label for="female">Female</label>
+                            <label for="female">Perempuan</label>
                         </div>
                     </div>
                 </div>
                 <div class="form-navigation">
-                    <button type="button" class="btn-next">Next Step →</button>
+                    <button type="button" class="btn-next">Seterusnya →</button>
                 </div>
             </div>
 
@@ -165,26 +184,23 @@ $conn->close();
                     <input type="text" id="institusi" name="institusi" placeholder="Enter your institution" required>
                 </div>
                 <div class="input-group full-width">
-                    <label for="alamat">Alamat Menyurat</label>
-                    <textarea id="alamat" name="alamat" placeholder="Masukkan Alamat Menyurat" required rows="5" style="font-family: Arial, sans-serif; resize:vertical; font-size:1.1rem; padding:12px;"></textarea>
-                </div>
-
-                <div class="input-group full-width">
                     <label for="alamatInstitusi">Alamat Institusi</label>
                     <textarea id="alamatInstitusi" name="alamatInstitusi" placeholder="Masukkan Alamat Institusi" required rows="5" style="font-family: Arial, sans-serif; resize:vertical; font-size:1.1rem; padding:12px;"></textarea>
                 </div>
                 <div class="input-group">
-                    <label for="department">Jawatan</label>
-                    <select id="department" name="department" required>
+                    <label for="jawatan">Jawatan</label>
+                    <select id="jawatan" name="jawatan" required>
                         <option value="">-- Pilih Jawatan --</option>
                         <?php foreach($jawatanOptions as $j): ?>
-                            <option value="<?= $j['IDJAWATAN'] ?>"><?= $j['NAMAJAWATAN'] ?></option>
+                            <option value="<?= $j['IDJAWATAN'] ?>"><?= $j['NAMA_JAWATAN'] ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
                 <div class="input-group">
                     <label for="gred">Gred</label>
-                    <input type="text" id="gred" name="gred" placeholder="Enter your grade" required>
+                      <select id="gred" name="gred" required>
+                          <option value="">-- Pilih Gred --</option>
+                      </select>
                 </div>
                 <div class="form-navigation">
                     <button type="button" class="btn-prev">← Previous</button>
@@ -210,6 +226,28 @@ $conn->close();
 </div>
 
   <script>
+      // Auto-populate DOB dari No IC
+      document.getElementById('noIC').addEventListener('input', function() {
+          const ic = this.value;
+          const dobInput = document.getElementById('dob');
+
+          // Pastikan ada 6 angka
+          if (/^\d{6}/.test(ic)) {
+              let yy = ic.substr(0,2);
+              let mm = ic.substr(2,2);
+              let dd = ic.substr(4,2);
+
+              // Tentukan abad (19xx atau 20xx)
+              let yearPrefix = (parseInt(yy) > 50) ? '19' : '20';
+              let year = yearPrefix + yy;
+
+              // Format YYYY-MM-DD untuk input type=date
+              dobInput.value = `${year}-${mm}-${dd}`;
+          } else {
+              dobInput.value = '';
+          }
+      });
+
         function toggleProgramForm(select) {
       const form = document.getElementById("newProgramForm");
       if (select.value === "new") {
@@ -295,6 +333,23 @@ $conn->close();
         errorBox.style.display = "none";
       }
     });
+
+    
+      document.getElementById('jawatan').addEventListener('change', function(){
+          const jawatanId = this.value;
+          fetch('get_gred.php?jawatan_id=' + jawatanId)
+              .then(res => res.json())
+              .then(data => {
+                  const gredSelect = document.getElementById('gred');
+                  gredSelect.innerHTML = '<option value="">-- Pilih Gred --</option>';
+                  data.forEach(g => {
+                      const option = document.createElement('option');
+                      option.value = g.IDGRED;
+                      option.textContent = g.GRED;
+                      gredSelect.appendChild(option);
+                  });
+              });
+      });
 
     updateStep();
   </script>
