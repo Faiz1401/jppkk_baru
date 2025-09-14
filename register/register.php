@@ -82,181 +82,132 @@ $conn->close();
       border-radius:5px;
       display:none;
     }
+
+    input, select, textarea {
+        border: 1px solid #ccc; /* normal */
+        border-radius: 5px;
+        padding: 12px;
+    }
+
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Left Panel -->
+<div class="container">
     <div class="left-side">
-      <h1>Join Us Today</h1>
-      <p>Fill out this form to get started with your account.</p>
+        <h1>Join Us Today</h1>
+        <p>Fill out this form to get started with your account.</p>
     </div>
 
-    <!-- Right Panel -->
     <div class="right-side">
-      <form id="registrationForm" action="process_register.php" method="POST">
-        <!-- Error Box -->
-        <div class="error-box" id="errorBox">⚠ Please fill in all required fields before continuing.</div>
+        <form id="registrationForm" action="process_register.php" method="POST">
+            <div class="error-box" id="errorBox">⚠ Please fill in all required fields before continuing.</div>
 
-        <!-- Step 1 -->
-        <div class="form-step active">
-          <h2>Step 1: Personal Information</h2>
-          <div class="input-group">
-            <label for="name">Full Name</label>
-            <input type="text" id="name" name="name" placeholder="Full Name" required>
-          </div>
-          <div class="input-group">
-            <label for="gred">Gred</label>
-            <input type="text" id="gred" name="gred" placeholder="Enter your grade" required>
-          </div>
-          <div class="input-group">
-            <label for="noIC">IC Number</label>
-            <input type="text" id="noIC" name="noIC" placeholder="Enter your IC number" required>
-          </div>
-          <div class="input-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Enter your email" required>
-          </div>
-          <div class="input-group">
-            <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
-          </div>
-          <div class="input-group">
-            <label for="religion">Religion</label>
-            <select id="religion" name="religion" required>
-              <option value="">--Select Religion--</option>
-              <option value="Islam">Islam</option>
-              <option value="Christianity">Christianity</option>
-              <option value="Hinduism">Hinduism</option>
-              <option value="Buddhism">Buddhism</option>
-              <option value="Sikhism">Sikhism</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-          <div class="input-group full-width">
-            <div class="gender">
-              <label>Gender</label>
-              <div>
-                <input type="radio" id="male" name="gender" value="Male" required>
-                <label for="male">Male</label>
-                <input type="radio" id="female" name="gender" value="Female" required>
-                <label for="female">Female</label>
-              </div>
-            </div>
-          </div>
-          <div class="form-navigation">
-            <button type="button" class="btn-next">Next Step →</button>
-          </div>
-        </div>
-
-        <!-- Step 2 -->
-        <div class="form-step">
-          <h2>Step 2: Academic Information</h2>
-          <div class="input-group">
-            <label for="institusi">Institution</label>
-            <input type="text" id="institusi" name="institusi" placeholder="Enter your institution" required>
-          </div>
-          <div class="input-group">
-            <label for="field">Field of Study</label>
-            <select id="field" name="field" required>
-              <option value="">-- Pilih Bidang --</option>
-              <?php foreach ($bidangOptions as $opt): ?>
-                <option value="<?= $opt['IDBIDANGBK'] ?>"><?= $opt['NAMABIDANGBK'] ?></option>
-              <?php endforeach; ?>
-            </select>
-          </div>
-          <div class="input-group">
-            <label for="subField">Sub Field</label>
-            <input type="text" id="subField" name="subField" placeholder="Enter your sub field" required>
-          </div>
-          <div class="input-group">
-            <label for="department">Department</label>
-            <input type="text" id="department" name="department" placeholder="Enter your department" required>
-          </div>
-            <div class="input-group">
-            <label for="program">Program</label>
-              <select id="program" name="program" required onchange="toggleProgramForm(this)">
-                  <option value="">-- Pilih Program --</option>
-                  <?php
-                  include 'db_connection.php';
-                  $sql = "SELECT KODPROGRAM, NAMAPROGRAM FROM tblprogram";
-                  $res = $conn->query($sql);
-                  if ($res && $res->num_rows > 0) {
-                      while ($row = $res->fetch_assoc()) {
-                          // Display "KODPROGRAM - NAMAPROGRAM", value tetap KODPROGRAM
-                          echo "<option value='" . $row['KODPROGRAM'] . "'>" . $row['KODPROGRAM'] . " - " . $row['NAMAPROGRAM'] . "</option>";
-                      }
-                  }
-                  ?>
-                  <option value="new">+ Tambah Program Baru</option>
-              </select>
-            </div>
-            <!-- Borang Tambah Program Baru (hidden by default) -->
-            <div id="newProgramForm" style="display:none; grid-column:span 2; border:1px solid #ccc; padding:15px; margin-top:10px; border-radius:5px;">
-              <h3>Tambah Program Baru</h3>
-              <div class="input-group">
-                <label for="jenisProgram">Jenis Program</label>
-                <input type="text" id="jenisProgram" name="jenisProgram">
-              </div>
-              <div class="input-group">
-                <label for="kodProgram">Kod Program</label>
-                <input type="text" id="kodProgram" name="kodProgram">
-              </div>
-              <div class="input-group">
-                <label for="namaProgram">Nama Program</label>
-                <input type="text" id="namaProgram" name="namaProgram">
-              </div>
-              <div class="input-group">
-                <label for="bilKursus">Bilangan Kursus</label>
-                <input type="number" id="bilKursus" name="bilKursus">
-              </div>
-              <div class="input-group">
-                <label for="necCode">NEC Code</label>
-                <input type="number" id="necCode" name="necCode">
-              </div>
-              <div class="input-group">
-                <label for="akreditasi">Akreditasi</label>
-                <input type="text" id="akreditasi" name="akreditasi">
-              </div>
-              <div class="input-group">
-                <label for="versi">Versi</label>
-                <input type="text" id="versi" name="versi">
-              </div>
-              <div class="input-group">
-                <label for="tempoh">Tempoh Pengajian</label>
-                <input type="number" id="tempoh" name="tempoh">
-              </div>
+            <!-- Step 1 -->
+            <div class="form-step active">
+                <h2>Step 1: Personal Information</h2>
+                <div class="input-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="Full Name" required>
+                </div>
+                <div class="input-group">
+                    <label for="DOB">Tarikh Lahir</label>
+                    <input type="date" id="DOB" name="DOB" required>
+                </div>
+                <div class="input-group">
+                    <label for="retirementDate">Tarikh Bersara</label>
+                    <input type="date" id="retirementDate" name="retirementDate" required>
+                </div>
+                <div class="input-group">
+                    <label for="noIC">IC Number</label>
+                    <input type="text" id="noIC" name="noIC" placeholder="Enter your IC number" required>
+                </div>
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+                <div class="input-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+                </div>
+                <div class="input-group">
+                    <label for="religion">Religion</label>
+                    <select id="religion" name="religion" required>
+                        <option value="">--Select Religion--</option>
+                        <option value="Islam">Islam</option>
+                        <option value="Christianity">Christianity</option>
+                        <option value="Hinduism">Hinduism</option>
+                        <option value="Buddhism">Buddhism</option>
+                        <option value="Sikhism">Sikhism</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="input-group full-width">
+                    <div class="gender">
+                        <label>Gender</label>
+                        <div>
+                            <input type="radio" id="male" name="gender" value="Male" required>
+                            <label for="male">Male</label>
+                            <input type="radio" id="female" name="gender" value="Female" required>
+                            <label for="female">Female</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-navigation">
+                    <button type="button" class="btn-next">Next Step →</button>
+                </div>
             </div>
 
-          <div class="input-group">
-            <label for="appointmentDate">Appointment Date</label>
-            <input type="date" id="appointmentDate" name="appointmentDate" required>
-          </div>
-          <div class="input-group">
-            <label for="retirementDate">Retirement Date</label>
-            <input type="date" id="retirementDate" name="retirementDate" required>
-          </div>
-          <div class="form-navigation">
-            <button type="button" class="btn-prev">← Previous</button>
-            <button type="button" class="btn-next">Next Step →</button>
-          </div>
-        </div>
+            <!-- Step 2 -->
+            <div class="form-step">
+                <h2>Step 2: Academic / Institution Information</h2>
+                <div class="input-group">
+                    <label for="institusi">Institution</label>
+                    <input type="text" id="institusi" name="institusi" placeholder="Enter your institution" required>
+                </div>
+                <div class="input-group full-width">
+                    <label for="alamat">Alamat Menyurat</label>
+                    <textarea id="alamat" name="alamat" placeholder="Masukkan Alamat Menyurat" required rows="5" style="font-family: Arial, sans-serif; resize:vertical; font-size:1.1rem; padding:12px;"></textarea>
+                </div>
 
-        <!-- Step 3 -->
-        <div class="form-step">
-          <h2>Step 3: Confirmation</h2>
-          <div class="input-group full-width confirmation">
-            <input type="checkbox" id="confirmation">
-            <label for="confirmation">Saya mengesahkan segala maklumat yang diisikan adalah benar.</label>
-          </div>
-          <div class="form-navigation">
-            <button type="button" class="btn-prev">← Previous</button>
-            <button type="submit" id="submitBtn" class="btn-submit btn-disabled" disabled>Submit</button>
-          </div>
-        </div>
-      </form>
+                <div class="input-group full-width">
+                    <label for="alamatInstitusi">Alamat Institusi</label>
+                    <textarea id="alamatInstitusi" name="alamatInstitusi" placeholder="Masukkan Alamat Institusi" required rows="5" style="font-family: Arial, sans-serif; resize:vertical; font-size:1.1rem; padding:12px;"></textarea>
+                </div>
+                <div class="input-group">
+                    <label for="department">Jawatan</label>
+                    <select id="department" name="department" required>
+                        <option value="">-- Pilih Jawatan --</option>
+                        <?php foreach($jawatanOptions as $j): ?>
+                            <option value="<?= $j['IDJAWATAN'] ?>"><?= $j['NAMAJAWATAN'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="gred">Gred</label>
+                    <input type="text" id="gred" name="gred" placeholder="Enter your grade" required>
+                </div>
+                <div class="form-navigation">
+                    <button type="button" class="btn-prev">← Previous</button>
+                    <button type="button" class="btn-next">Next Step →</button>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="form-step">
+                <h2>Step 3: Confirmation</h2>
+                <div class="input-group full-width confirmation">
+                    <input type="checkbox" id="confirmation">
+                    <label for="confirmation">Saya mengesahkan segala maklumat yang diisikan adalah benar.</label>
+                </div>
+                <div class="form-navigation">
+                    <button type="button" class="btn-prev">← Previous</button>
+                    <button type="submit" id="submitBtn" class="btn-submit btn-disabled" disabled>Submit</button>
+                </div>
+            </div>
+
+        </form>
     </div>
-  </div>
+</div>
 
   <script>
         function toggleProgramForm(select) {
@@ -286,7 +237,7 @@ $conn->close();
     }
 
     function validateStep(stepIndex) {
-      const inputs = steps[stepIndex].querySelectorAll("input, select");
+      const inputs = steps[stepIndex].querySelectorAll("input, select, textarea");
       let valid = true;
       inputs.forEach(input => {
         input.style.border = "1px solid #ccc"; // reset

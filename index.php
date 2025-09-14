@@ -62,6 +62,14 @@
                     <button onclick="closeErrorBox()">Close</button>
                 </div>
             </div>
+            
+            <?php
+                session_start();
+                if (isset($_SESSION['login_error'])) {
+                    echo "<script>showErrorBox('".$_SESSION['login_error']."');</script>";
+                    unset($_SESSION['login_error']);
+                }
+            ?>
 
             <form action="login.php" method="POST" onsubmit="return validateLoginForm()">
                 <label for="username">IC Number</label>
@@ -81,27 +89,15 @@
     <script>
         // Function to validate Sign In form
         function validateLoginForm() {
-            // Get the values of the username and password fields
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
 
-            // Check if the username or password is empty
             if (!username || !password) {
-                showErrorBox("Please enter both IC Number and Password.");
+                showErrorBox("Sila masukkan IC Number dan Password.");
                 return false;
             }
 
-            // Simulate checking credentials (you can replace this with an actual check against your database)
-            const correctUsername = "user123";  // Replace with actual logic
-            const correctPassword = "password";  // Replace with actual logic
-
-            if (username !== correctUsername || password !== correctPassword) {
-                showErrorBox("Incorrect IC Number or Password.");
-                return false;
-            }
-
-            // If validation passes, submit the form
-            return true;
+            return true; // Hanya pastikan field diisi, credential sebenar di check di PHP
         }
 
         // Show the error box modal
