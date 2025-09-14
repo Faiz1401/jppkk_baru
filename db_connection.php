@@ -3,7 +3,7 @@ $servername = "localhost";    // Database server (use localhost if running local
 $username = "root";           // Your database username
 $password = "";               // Your database password
 $dbname = "jppkk_test";       // Your database name
-$port = 4306;                 // Custom port for MySQL connection
+$port = 4306;                 // Custom port for MySQL connectio
 
 // Create connection using custom port
 $conn = new mysqli($servername, $username, $password, $dbname, $port);
