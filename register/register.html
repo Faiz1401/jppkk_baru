@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Pop-up Modal Overlay for Error and Confirmation */
+        .error-overlay, .confirmation-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            z-index: 1000; /* Ensure the overlay is on top */
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards; /* Animation for modal appearance */
+        }
+
+        /* Modal box styling */
+        .modal-box {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 30px;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-50px);
+            animation: modalPopUp 0.3s ease-in-out;
+        }
+
+        .modal-box button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #721c24;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .modal-box button:hover {
+            background-color: #5a1d1d;
+        }
+
+        /* Modal box button */
+        .modal-box button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #3498db;  /* Blue button */
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .modal-box button:hover {
+            background-color: #2980b9;  /* Darker blue on hover */
+        }
+
+        /* Fade-in animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Modal pop-up animation */
+        @keyframes modalPopUp {
+            0% {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Style for button to go to next step */
+        #nextStep {
+            padding: 10px 20px;
+            background-color: #8e44ad;
+            color: white;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #nextStep i {
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-side">
+            <h1>Registration</h1>
+            <p>Please fill in the form below to create an account.</p>
+        </div>
+        <div class="right-side">
+            <!-- Error Modal Overlay -->
+            <div class="error-overlay" id="errorOverlay">
+                <div class="modal-box">
+                    <p>Please fill out all fields in Step 1 before proceeding.</p>
+                    <button onclick="closeErrorBox()">Close</button>
+                </div>
+            </div>
+
+            <!-- Confirmation Modal Overlay -->
+            <div class="confirmation-overlay" id="confirmationOverlay">
+                <div class="modal-box" style="background-color: #d4edda; color: #155724;">
+                    <p>Step 1 is completed successfully. You may now proceed to Step 2.</p>
+                    <button onclick="closeConfirmationBox()">Proceed</button> <!-- Updated button text -->
+                </div>
+            </div>
+
+            <!-- Step 1 -->
+            <div id="step1">
+                <h2>Step 1</h2>
+                <form id="registrationForm" action="process_registration.php" method="POST">
+                    <div class="input-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="noIC">IC Number</label>
+                        <input type="text" id="noIC" name="noIC" placeholder="Enter your IC number" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+                    </div>
+
+                    <!-- Religion Dropdown -->
+                    <div class="input-group">
+                        <label for="religion">Religion</label>
+                        <select id="religion" name="religion" required>
+                            <option value="">--Select Religion--</option>
+                            <option value="Islam">Islam</option>
+                            <option value="Christianity">Christianity</option>
+                            <option value="Hinduism">Hinduism</option>
+                            <option value="Buddhism">Buddhism</option>
+                            <option value="Sikhism">Sikhism</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <!-- Gender -->
+                    <div class="input-group gender">
+                        <label>Gender</label>
+                        <div>
+                            <input type="radio" id="male" name="gender" value="Male" required>
+                            <label for="male">Male</label>
+                            <input type="radio" id="female" name="gender" value="Female" required>
+                            <label for="female">Female</label>
+                        </div>
+                    </div>
+                    <a href="../index.php">
+                        <button type="button" id="backToSignIn">Sign In</button>
+                    </a>
+                    <div class="input-group">
+                        <button type="submit" id="nextStep">
+                            <i class="fas fa-arrow-right"></i> Next Step
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Step 2 -->
+             <div id="step2" style="display: none;">
+                <h2>Step 2</h2>
+                <form id="step2Form" action="process_registration.php" method="POST">
+                    <div class="input-group">
+                        <label for="institusi">Institution</label>
+                        <input type="text" id="institusi" name="institusi" placeholder="Enter your institution" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="field">Field of Study</label>
+                        <input type="text" id="field" name="field" placeholder="Enter your field of study" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="subField">Sub Field</label>
+                        <input type="text" id="subField" name="subField" placeholder="Enter your sub field" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="department">Department</label>
+                        <input type="text" id="department" name="department" placeholder="Enter your department" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="program">Program</label>
+                        <input type="text" id="program" name="program" placeholder="Enter your program" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="appointmentDate">Appointment Date</label>
+                        <input type="date" id="appointmentDate" name="appointmentDate" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="retirementDate">Retirement Date</label>
+                        <input type="date" id="retirementDate" name="retirementDate" required>
+                    </div>
+
+                    <button type="submit" class="submit-button">Submit</button>
+
+                    <button type="button" id="backToStep1">Back to Step 1</button>
+                    <a href="../index.php">
+                        <button type="button" id="backToSignIn">Sign In</button>
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to validate Step 1 before going to Step 2
+        function validateStep1() {
+            const fullName = document.getElementById('fullName').value;
+            const noIC = document.getElementById('noIC').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const religion = document.getElementById('religion').value;
+            const gender = document.querySelector('input[name="gender"]:checked');
+            
+            if (!fullName || !noIC || !email || !phone || !religion || !gender) {
+                showErrorBox();  // Show error box if validation fails
+                return false;
+            }
+            return true;
+        }
+
+        // Show the error box as a pop-up modal
+        function showErrorBox() {
+            document.getElementById("errorOverlay").style.display = "flex";
+        }
+
+        // Close the error box modal
+        function closeErrorBox() {
+            document.getElementById("errorOverlay").style.display = "none";
+        }
+
+        // Show the confirmation box when Step 1 is successfully completed
+        function showConfirmationBox() {
+            document.getElementById("confirmationOverlay").style.display = "flex";
+        }
+
+        // Close the confirmation box modal
+        function closeConfirmationBox() {
+            document.getElementById("confirmationOverlay").style.display = "none";
+        }
+
+        // Show the next step when "Next Step" button is clicked
+        document.getElementById("nextStep").addEventListener("click", function() {
+            if (validateStep1()) {
+                showConfirmationBox();  // Show confirmation box
+                document.getElementById("step1").style.display = "none";
+                document.getElementById("step2").style.display = "block";
+            }
+        });
+
+        // Go back to Step 1 when "Back to Step 1" button is clicked
+        document.getElementById("backToStep1").addEventListener("click", function() {
+            document.getElementById("step2").style.display = "none";
+            document.getElementById("step1").style.display = "block";
+            closeErrorBox();  // Close error box when going back to Step 1
+        });
+    </script>
+</body>
+</html>
