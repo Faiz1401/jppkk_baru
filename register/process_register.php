@@ -1,16 +1,21 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require '../PHPMailer/src/Exception.php';
+require '../PHPMailer/src/PHPMailer.php';
+require '../PHPMailer/src/SMTP.php';
+
 include 'db_connection.php';
 
-// Function: generate temporary password
+// function generate temp password
 function generateTempPass($length = 8) {
     $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     return substr(str_shuffle($chars), 0, $length);
 }
 
-// Only process POST requests
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    // Collect data from POST
+    // collect data
     $no_ic      = $_POST['noIC'] ?? null;
     $name       = $_POST['name'] ?? null;
     $gred       = $_POST['gred'] ?? null;
@@ -26,20 +31,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email      = $_POST['email'] ?? null;
     $phone      = $_POST['phone'] ?? null;
 
-    // Validate required fields
+    // validate required
     if (!$no_ic || !$name || !$gred || !$jantina || !$agama || !$institusi || !$bidang || !$email || !$phone) {
         echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
         <script>
             Swal.fire({
-                icon: 'warning',
+                icon: 'error',
                 title: 'Incomplete Data',
-                text: '⚠ Please fill in all required fields!'
+                text: '⚠ Please fill in all required fields!',
             }).then(() => { window.history.back(); });
         </script>";
         exit;
     }
 
-    // Handle "new program" if selected
+    // Jika user tambah program baru
     if ($program === "new") {
         $kodProgram = $_POST['kodProgram'] ?? null;
         $namaProgram = $_POST['namaProgram'] ?? null;
@@ -59,15 +64,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             );
 
             if ($stmtProg->execute()) {
-                $program = $kodProgram; // assign new program code
+                $program = $kodProgram;
             } else {
-                $errorMsg = addslashes($stmtProg->error);
                 echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
                 <script>
                     Swal.fire({
                         icon: 'error',
                         title: 'Program Error',
-                        text: '❌ Error insert program: $errorMsg'
+                        text: '❌ Error insert program: " . $stmtProg->error . "'
                     }).then(() => { window.history.back(); });
                 </script>";
                 exit;
@@ -86,10 +90,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    // Generate temporary password
+    // generate temp password
     $temp_pass = generateTempPass();
 
-    // Insert user data
+    // insert user
     $sql = "INSERT INTO tbluser 
         (NO_IC, NAMA, GRED, JANTINA, AGAMA, INSTITUSI, BIDANG_PENGAJIAN, SUB_BIDANG, JABATAN_UNIT, PROGRAM, TARIKH_LANTIKAN, TARIKH_PENCEN, EMAIL, PHONE, TEMP_PASS)
         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -100,44 +104,64 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     );
 
     if ($stmt->execute()) {
-        echo '<!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <title>Registration</title>
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        </head>
-        <body>
-        <script>
-            Swal.fire({
-                icon: "success",
-                title: "Registration Successful!",
-                html: "✅ Your temporary password is: <strong>'.$temp_pass.'</strong>",
-                confirmButtonText: "Go to Login"
-            }).then(() => { window.location.href="../index.php"; });
-        </script>
-        </body>
-        </html>';
+        // Send email using PHPMailer
+        $mail = new PHPMailer(true);
+        try {
+            // Server settings
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com'; // contoh pakai Gmail
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'your_email@gmail.com'; // tukar ke email anda
+            $mail->Password   = 'your_email_password'; // tukar password/app password
+            $mail->SMTPSecure = 'tls';
+            $mail->Port       = 587;
+
+            // Recipients
+            $mail->setFrom('your_email@gmail.com', 'JPPKK System');
+            $mail->addAddress($email, $name);
+
+            // Content
+            $mail->isHTML(true);
+            $mail->Subject = 'Registration Successful';
+            $mail->Body    = "Hi $name,<br><br>✅ Your registration was successful!<br>
+                              Your temporary password is: <strong>$temp_pass</strong><br>
+                              Please wait for admin confirmation before logging in.<br><br>
+                              Regards,<br>JPPKK Team";
+
+            $mail->send();
+
+            // Success alert
+            echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+            <script>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Registration Successful!',
+                    html: '✅ Your temporary password has been sent to your email.<br>Please wait for admin confirmation.',
+                    confirmButtonText: 'Go to Login'
+                }).then(() => { window.location.href='../index.php'; });
+            </script>";
+
+        } catch (Exception $e) {
+            echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+            <script>
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Registration Done, Email Failed',
+                    html: 'Registration successful, but failed to send email.<br>Error: " . $mail->ErrorInfo . "',
+                    confirmButtonText: 'Go to Login'
+                }).then(() => { window.location.href='../index.php'; });
+            </script>";
+        }
+
     } else {
-        $errorMsg = addslashes($stmt->error);
-                echo '<!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <title>Registration</title>
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        </head>
-        <body>
+        echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
         <script>
             Swal.fire({
-                icon: "success",
-                title: "Registration Successful!",
-                html: "❌ Error insert user: <strong>'.$errorMsg.'</strong>",
-                confirmButtonText: "Go to Login"
+                icon: 'error',
+                title: 'Registration Failed',
+                text: '❌ Error insert user: " . $stmt->error . "'
             }).then(() => { window.history.back(); });
-        </script>
-        </body>
-        </html>';
+        </script>";
     }
 
     $stmt->close();
