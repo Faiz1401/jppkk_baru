@@ -103,6 +103,57 @@ $conn->close();
         padding: 12px;
     }
 
+    /* Progressbar (Rail Kereta Api) */
+    .progressbar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 30px;
+      gap: 10px;
+    }
+
+    .progress-step {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background: #ccc;
+      color: white;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.3s;
+    }
+
+    .progress-step.active {
+      background: #8e44ad; /* purple */
+    }
+
+    .progress-line {
+      flex: 1;
+      height: 4px;
+      background: #ccc;
+      transition: 0.3s;
+    }
+
+    .progress-line.active {
+      background: #8e44ad;
+    }
+    /* Sign In Button */
+.signin-btn {
+  background: #27ae60; /* hijau */
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.signin-btn:hover {
+  background: #219150;
+}
+
   </style>
 </head>
 <body>
@@ -113,6 +164,13 @@ $conn->close();
     </div>
 
     <div class="right-side">
+          <div class="progressbar">
+            <div class="progress-step active">1</div>
+            <div class="progress-line"></div>
+            <div class="progress-step">2</div>
+            <div class="progress-line"></div>
+            <div class="progress-step">3</div>
+          </div>
         <form id="registrationForm" action="process_register.php" method="POST">
             <div class="error-box" id="errorBox">⚠ Sila isi semua butiran dibawah.</div>
 
@@ -137,11 +195,11 @@ $conn->close();
                 </div>
                 <div class="input-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="Masukkan Email Anda" required>
+                    <input type="email" id="email" name="email" placeholder="Masukkan Email" required>
                 </div>
                 <div class="input-group">
                     <label for="phone">Nombor Telefon</label>
-                    <input type="tel" id="phone" name="phone" placeholder="Masukkan Nombor Telefon Anda (0123456789)" required>
+                    <input type="tel" id="phone" name="phone" placeholder="Nombor Telefon (0123456789)" required>
                 </div>
                 <div class="input-group full-width">
                     <label for="alamat">Alamat</label>
@@ -218,6 +276,7 @@ $conn->close();
                 <div class="form-navigation">
                     <button type="button" class="btn-prev">← Previous</button>
                     <button type="submit" id="submitBtn" class="btn-submit btn-disabled" disabled>Submit</button>
+                    <a href="../index.php" class="signin-btn">Sign In</a>
                 </div>
             </div>
 
@@ -355,6 +414,32 @@ $conn->close();
               });
           }
       });
+      function updateStep() {
+  steps.forEach((step, index) => {
+    step.classList.toggle("active", index === currentStep);
+  });
+
+  // Update progressbar
+  const progressSteps = document.querySelectorAll(".progress-step");
+  const progressLines = document.querySelectorAll(".progress-line");
+
+  progressSteps.forEach((ps, idx) => {
+    if (idx <= currentStep) {
+      ps.classList.add("active");
+    } else {
+      ps.classList.remove("active");
+    }
+  });
+
+  progressLines.forEach((line, idx) => {
+    if (idx < currentStep) {
+      line.classList.add("active");
+    } else {
+      line.classList.remove("active");
+    }
+  });
+}
+
     updateStep();
   </script>
 </body>

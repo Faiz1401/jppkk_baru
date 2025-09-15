@@ -19,9 +19,9 @@ function sendTempPassword($toEmail, $temp_pass, $name) {
     $mail = new PHPMailer(true);
     try {
         $mail->isSMTP();
-        $mail->Host       = 'smtp.gmail.com'; // ganti dengan SMTP server sebenar
+        $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'faizrazak1401@gmail.com'; // email dari mana
+        $mail->Username   = 'faizrazak1401@gmail.com';
         $mail->Password   = 'rtmjoiaavkfapext'; // app password Gmail
         $mail->SMTPSecure = 'tls';
         $mail->Port       = 587;
@@ -67,6 +67,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['jawatan_id'])) {
     exit;
 }
 
+// ============================
+// Handle POST (Registration)
+// ============================
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Collect data
     $noIC           = $_POST['noIC'] ?? null;
@@ -84,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $gred_id        = $_POST['gred'] ?? null;
 
     // Validate required fields
-       if (!$noIC || !$name || !$dob || !$retirementDate || !$email || !$phone || !$religion || !$gender || !$institusi || !$alamat || !$alamatInstitusi || !$jawatan_id || !$gred_id) {
+    if (!$noIC || !$name || !$dob || !$retirementDate || !$email || !$phone || !$religion || !$gender || !$institusi || !$alamat || !$alamatInstitusi || !$jawatan_id || !$gred_id) {
         echo '<!DOCTYPE html>
         <html lang="en">
         <head>
@@ -104,6 +107,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </html>';
         exit;
     }
+
+    // ============================
+    // Check IC already registered
+    // ============================
+    $check = $conn->prepare("SELECT NO_IC FROM tbluser WHERE NO_IC = ?");
+    $check->bind_param("s", $noIC);
+    $check->execute();
+    $check->store_result();
+
+    if ($check->num_rows > 0) {
+        echo '<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Registration</title>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        </head>
+        <body>
+        <script>
+            Swal.fire({
+                icon: "error",
+                title: "Duplicate IC",
+                text: "⚠ This IC number is already registered!"
+            }).then(() => { window.history.back(); });
+        </script>
+        </body>
+        </html>';
+        $check->close();
+        $conn->close();
+        exit;
+    }
+    $check->close();
 
     // Generate temp password
     $temp_pass = generateTempPass();
