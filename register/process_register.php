@@ -19,10 +19,10 @@ function sendTempPassword($toEmail, $temp_pass, $name) {
     $mail = new PHPMailer(true);
     try {
         $mail->isSMTP();
-        $mail->Host       = 'smtp.gmail.com';
+        $mail->Host       = 'smtp.gmail.com'; // ganti dengan SMTP server sebenar
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'faizrazak1401@gmail.com';
-        $mail->Password   = 'rtmjoiaavkfapext';
+        $mail->Username   = 'faizrazak1401@gmail.com'; // email dari mana
+        $mail->Password   = 'rtmjoiaavkfapext'; // app password Gmail
         $mail->SMTPSecure = 'tls';
         $mail->Port       = 587;
 
@@ -44,9 +44,32 @@ function sendTempPassword($toEmail, $temp_pass, $name) {
     }
 }
 
+// ============================
+// Handle GET request -> return Gred JSON
+// ============================
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['jawatan_id'])) {
+    $jawatan_id = intval($_GET['jawatan_id']);
+    $sql = "SELECT IDGRED, GRED FROM tblgred WHERE JAWATAN_ID = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $jawatan_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $greds = [];
+    while ($row = $result->fetch_assoc()) {
+        $greds[] = $row;
+    }
+
+    header('Content-Type: application/json');
+    echo json_encode($greds);
+    $stmt->close();
+    $conn->close();
+    exit;
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Collect data
-    $noIC          = $_POST['noIC'] ?? null;
+    $noIC           = $_POST['noIC'] ?? null;
     $name           = $_POST['name'] ?? null;
     $dob            = $_POST['dob'] ?? null;
     $retirementDate = $_POST['retirementDate'] ?? null;
@@ -57,14 +80,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $institusi      = $_POST['institusi'] ?? null;
     $alamat         = $_POST['alamat'] ?? null;
     $alamatInstitusi= $_POST['alamatInstitusi'] ?? null;
-    $jawatan        = $_POST['department'] ?? null;
-    $gred           = $_POST['gred'] ?? null;
-    // Ambil jawatan & gred dari form
-    $jawatan_id = $_POST['jawatan'] ?? null; // department = dropdown jawatan
-    $gred_id    = $_POST['gred'] ?? null;       // gred = dropdown gred
+    $jawatan_id     = $_POST['jawatan'] ?? null; 
+    $gred_id        = $_POST['gred'] ?? null;
 
     // Validate required fields
-    if (!$noIC || !$name || !$dob || !$retirementDate || !$email || !$phone || !$religion || !$gender || !$institusi || !$alamat || !$alamatInstitusi || !$jawatan_id || !$gred_id) {
+       if (!$noIC || !$name || !$dob || !$retirementDate || !$email || !$phone || !$religion || !$gender || !$institusi || !$alamat || !$alamatInstitusi || !$jawatan_id || !$gred_id) {
         echo '<!DOCTYPE html>
         <html lang="en">
         <head>
@@ -90,7 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Insert user
     $sql = "INSERT INTO tbluser 
-        (NO_IC, NAMA, TARIKH_LAHIR, TARIKH_PENCEN, EMAIL, PHONE, AGAMA, JANTINA, INSTITUSI, ALAMAT, ALAMAT_INSTITUSI, IDJAWATAN, IDGRED, TEMP_PASS)
+        (NO_IC, NAMA, TARIKH_LAHIR, TARIKH_PENCEN, EMAIL, PHONE, AGAMA, JANTINA, INSTITUSI, ALAMAT, ALAMAT_INSTITUSI, IDJAWATAN, GRED_ID, TEMP_PASS)
         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
     $stmt = $conn->prepare($sql);
@@ -116,7 +136,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 title: "Registration Successful!",
                 html: "✅ Your registration has been sent to your email.<br>Please wait for admin confirmation.<br>Your temporary password is: <strong>'.$temp_pass.'</strong>",
                 confirmButtonText: "Go to Login"
-            }).then(() => { window.location.href=\"../index.php\"; });
+            }).then(() => { window.location.href="../index.php"; });
         </script>
         </body>
         </html>';
@@ -140,8 +160,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </html>';
     }
 
-
-        $stmt->close();
-        $conn->close();
-    }
+    $stmt->close();
+    $conn->close();
+}
 ?>

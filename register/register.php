@@ -1,16 +1,15 @@
 <?php
 include 'db_connection.php';
-$jawatan_id = $_GET['jawatan_id'] ?? 0;
-$sql = "SELECT IDGRED, GRED FROM tblgred WHERE JAWATAN_ID = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $jawatan_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$greds = [];
-while($row = $result->fetch_assoc()){
-    $greds[] = $row;
+
+$jawatanOptions = [];
+$sql = "SELECT IDJAWATAN, NAMA_JAWATAN FROM tbljawatan";
+$result = $conn->query($sql);
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $jawatanOptions[] = $row;
+    }
 }
-echo json_encode($greds);
+$conn->close();
 ?>
 
 <?php
@@ -196,11 +195,12 @@ $conn->close();
                         <?php endforeach; ?>
                     </select>
                 </div>
+
                 <div class="input-group">
                     <label for="gred">Gred</label>
-                      <select id="gred" name="gred" required>
-                          <option value="">-- Pilih Gred --</option>
-                      </select>
+                    <select id="gred" name="gred" required>
+                        <option value="">-- Pilih Gred --</option>
+                    </select>
                 </div>
                 <div class="form-navigation">
                     <button type="button" class="btn-prev">← Previous</button>
@@ -335,13 +335,17 @@ $conn->close();
     });
 
     
-      document.getElementById('jawatan').addEventListener('change', function(){
+      document.getElementById('jawatan').addEventListener('change', function() {
           const jawatanId = this.value;
-          fetch('get_gred.php?jawatan_id=' + jawatanId)
+          const gredSelect = document.getElementById('gred');
+
+          // reset dropdown
+          gredSelect.innerHTML = '<option value="">-- Pilih Gred --</option>';
+
+          if(jawatanId) {
+              fetch('process_register.php?jawatan_id=' + jawatanId)
               .then(res => res.json())
               .then(data => {
-                  const gredSelect = document.getElementById('gred');
-                  gredSelect.innerHTML = '<option value="">-- Pilih Gred --</option>';
                   data.forEach(g => {
                       const option = document.createElement('option');
                       option.value = g.IDGRED;
@@ -349,8 +353,8 @@ $conn->close();
                       gredSelect.appendChild(option);
                   });
               });
+          }
       });
-
     updateStep();
   </script>
 </body>
