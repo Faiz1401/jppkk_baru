@@ -20,29 +20,28 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt->bind_param("si", $hashed, $user_id);
 
         if ($stmt->execute()) {
+            // Jangan terus session_destroy(), tunggu selepas alert
             unset($_SESSION['require_password_change']);
-            session_destroy(); // paksa login semula
 
-    echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Berjaya!',
-            html: '<b>Anda telah kemaskini password anda.</b><br>Sila login semula untuk teruskan.',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#3085d6',
-            background: '#fefefe',
-            color: '#333',
-            showClass: {
-                popup: 'animate__animated animate__fadeInDown'
-            },
-            hideClass: {
-                popup: 'animate__animated animate__fadeOutUp'
-            }
-        }).then(() => {
-            window.location = 'index.php';
-        });
-    </script>";
+            echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+            <script src='https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.js'></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Password telah dikemaskini',
+                        text: 'Sila login semula untuk teruskan.',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#3085d6',
+                        background: '#ffffff',
+                        color: '#333',
+                        showClass: { popup: 'animate__animated animate__fadeInDown' },
+                        hideClass: { popup: 'animate__animated animate__fadeOutUp' }
+                    }).then(() => {
+                        window.location = 'upload_proof.php'; // Redirect ke upload bukti
+                    });
+                });
+            </script>";
             exit();
         } else {
             $error = "Ralat semasa update password. Sila cuba lagi.";
@@ -59,23 +58,31 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <title>Tukar Password</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Animate.css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </head>
 <body class="bg-light d-flex align-items-center justify-content-center vh-100">
 
-    <div class="card shadow-lg p-4" style="width: 400px;">
-        <h3 class="text-center mb-4">Tukar Password</h3>
+    <div class="card shadow-lg p-4 border-0 rounded-4" style="max-width: 420px; width: 100%;">
+        <h3 class="text-center mb-4 text-primary">🔒 Tukar Password</h3>
         <form method="POST">
             <div class="mb-3">
-                <label class="form-label">Password Baru</label>
-                <input type="password" class="form-control" name="new_password" required>
+                <label class="form-label fw-semibold">Password Baru</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-primary text-white">🔑</span>
+                    <input type="password" class="form-control" name="new_password" required placeholder="Masukkan password baru">
+                </div>
             </div>
             <div class="mb-3">
-                <label class="form-label">Sahkan Password</label>
-                <input type="password" class="form-control" name="confirm_password" required>
+                <label class="form-label fw-semibold">Sahkan Password</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-primary text-white">✅</span>
+                    <input type="password" class="form-control" name="confirm_password" required placeholder="Sahkan password baru">
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary w-100">Update</button>
+            <button type="submit" class="btn btn-primary w-100 mt-2">💾 Update Password</button>
         </form>
     </div>
 
@@ -85,7 +92,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 icon: 'error',
                 title: 'Oops...',
                 text: '<?php echo $error; ?>',
-                confirmButtonText: 'Cuba Lagi'
+                confirmButtonText: 'Cuba Lagi',
+                confirmButtonColor: '#d33',
+                showClass: {
+                    popup: 'animate__animated animate__shakeX'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                }
             });
         </script>
     <?php } ?>

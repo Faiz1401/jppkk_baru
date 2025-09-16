@@ -13,30 +13,41 @@ $result = $stmt->get_result();
 if ($result->num_rows === 1) {
     $user = $result->fetch_assoc();
 
-    // Kalau user login pakai TEMP_PASS
+    // 1. Kalau user login pakai TEMP_PASS
     if (!empty($user['TEMP_PASS']) && $password === $user['TEMP_PASS']) {
-        $_SESSION['user_id'] = $user['ID'];   // guna ID, bukan USER_ID
+        $_SESSION['user_id'] = $user['ID'];
         $_SESSION['username'] = $user['NO_IC'];
         $_SESSION['require_password_change'] = true;
         header("Location: change_password.php");
         exit();
     }
 
-    // Kalau user dah tukar password
+    // 2. Kalau user login pakai PASSWORD biasa
     if (!empty($user['PASSWORD']) && password_verify($password, $user['PASSWORD'])) {
+        // Semak status
+        if ($user['STATUS'] == 0) {
+            $_SESSION['login_error'] = "Akaun anda sedang menunggu pengesahan admin.";
+            header("Location: index.php");
+            exit();
+        }
+
+        // Kalau dah disahkan
         $_SESSION['user_id'] = $user['ID'];
         $_SESSION['username'] = $user['NO_IC'];
         $_SESSION['require_password_change'] = false;
         header("Location: dashboard.php");
         exit();
-    } else {
-        // Set error ke session untuk SweetAlert2 dalam index.php
-        $_SESSION['login_error'] = "Password salah!";
-        header("Location: index.php");
-        exit();
     }
+
+    // 3. Password salah
+    $_SESSION['login_error'] = "Password salah!";
+    header("Location: index.php");
+    exit();
+
 } else {
-    $_SESSION['login_error'] = "User tak jumpa!";
+    // User tak jumpa
+    $_SESSION['login_error'] = "User tidak wujud dalam sistem!";
     header("Location: index.php");
     exit();
 }
+?>

@@ -139,21 +139,6 @@ $conn->close();
     .progress-line.active {
       background: #8e44ad;
     }
-    /* Sign In Button */
-.signin-btn {
-  background: #27ae60; /* hijau */
-  color: white;
-  padding: 10px 20px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: 0.3s;
-}
-
-.signin-btn:hover {
-  background: #219150;
-}
-
   </style>
 </head>
 <body>
@@ -282,7 +267,6 @@ $conn->close();
                 <div class="form-navigation">
                     <button type="button" class="btn-prev">← Previous</button>
                     <button type="submit" id="submitBtn" class="btn-submit btn-disabled" disabled>Submit</button>
-                    <a href="../index.php" class="signin-btn">Sign In</a>
                 </div>
             </div>
 
