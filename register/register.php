@@ -157,10 +157,16 @@ $conn->close();
   </style>
 </head>
 <body>
-<div class="container">
-    <div class="left-side">
+    <div class="container">
+        <div class="left-side">
         <h1>Join Us Today</h1>
         <p>Fill out this form to get started with your account.</p>
+        <p style="margin-top:20px; font-size:1rem;">
+            Already have an account? 
+            <a href="../index.php" style="color: #fff; font-weight:bold; text-decoration: underline;">
+                Sign In
+            </a>
+        </p>
     </div>
 
     <div class="right-side">
