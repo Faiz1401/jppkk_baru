@@ -33,7 +33,16 @@ session_start();
         <!-- Right side -->
         <div class="right-side">
             <h2>Log Masuk</h2>
-            
+                <?php
+                    if (isset($_SESSION['error'])) {
+                        echo "<div class='alert alert-danger'>" . $_SESSION['error'] . "</div>";
+                        unset($_SESSION['error']);
+                    }
+                    if (isset($_SESSION['success'])) {
+                        echo "<div class='alert alert-success'>" . $_SESSION['success'] . "</div>";
+                        unset($_SESSION['success']);
+                    }
+                ?>
             <!-- Login Form -->
             <form action="login.php" method="POST" onsubmit="return validateLoginForm()">
                 <label for="username">Kad Pengenalan</label>
