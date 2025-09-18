@@ -48,10 +48,10 @@ session_start();
                 <label for="username">Kad Pengenalan</label>
                 <input type="text" id="username" name="username">
 
-                <label for="password">Password</label>
+                <label for="password">Kata Laluan</label>
                 <input type="password" id="password" name="password">
 
-                <a href="forgot_password.php">Lupa Password?</a>
+                <a href="forgot_password.php">Lupa Kata Laluan ?</a>
                 <button type="submit">Log Masuk</button>
             </form>
         </div>
@@ -63,13 +63,13 @@ session_start();
             const password = document.getElementById('password').value.trim();
 
             if (!username && !password) {
-                showErrorBox("Sila masukkan IC Number dan Password.");
+                showErrorBox("Sila masukkan IC Number dan Kata Laluan.");
                 return false;
             } else if (!username) {
                 showErrorBox("Sila masukkan IC Number.");
                 return false;
             } else if (!password) {
-                showErrorBox("Sila masukkan Password.");
+                showErrorBox("Sila masukkan Kata Laluan.");
                 return false;
             }
             return true;

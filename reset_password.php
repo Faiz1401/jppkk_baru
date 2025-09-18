@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Semak password sama tak
     if ($newPass !== $confirmPass) {
-        $_SESSION['error'] = "Password dan pengesahan password tidak sama.";
+        $_SESSION['error'] = "Kata laluan dan pengesahan kata laluan tidak sama.";
         header("Location: reset_password.php?token=" . urlencode($token));
         exit();
     }
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validasi panjang password
     if (strlen($newPass) < 8) {
-        $_SESSION['error'] = "Password mesti sekurang-kurangnya 8 aksara.";
+        $_SESSION['error'] = "Kata laluan mesti sekurang-kurangnya 8 aksara.";
         header("Location: reset_password.php?token=" . urlencode($token));
         exit();
     }
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         Swal.fire({
             icon: 'success',
             title: 'Berjaya!',
-            html: '<b>Password anda telah dikemaskini.</b><br>Sila login semula.',
+            html: '<b>Kata laluan anda telah dikemaskini.</b><br>Sila login semula.',
             confirmButtonText: 'Kembali ke Login',
             confirmButtonColor: '#3085d6'
         }).then(() => {
@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="ms">
 <head>
     <meta charset="UTF-8">
-    <title>Reset Password</title>
+    <title>Reset Kata Laluan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -84,25 +84,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <?php
 if ($token === '') {
-    $_SESSION['error'] = "Pautan reset tidak lengkap. Sila mohon reset password semula.";
+    $_SESSION['error'] = "Pautan reset tidak lengkap. Sila mohon reset kata laluan semula.";
     header("Location: forgot_password.php");
     exit();
 }
 ?>
 
 <div class="card shadow-lg p-4 border-0 rounded-4" style="max-width:420px;width:100%;">
-    <h3 class="text-center text-primary mb-3">🔒 Reset Password</h3>
+    <h3 class="text-center text-primary mb-3">🔒 Reset Kata Laluan</h3>
     <form method="post">
         <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
         <div class="mb-3">
-            <label class="form-label">Password Baru</label>
+            <label class="form-label">Kata Laluan Baru</label>
             <input type="password" class="form-control" name="password" required placeholder="Min 8 aksara">
         </div>
         <div class="mb-3">
-            <label class="form-label">Sahkan Password</label>
-            <input type="password" class="form-control" name="confirm_password" required placeholder="Masukkan semula password">
+            <label class="form-label">Sahkan Kata Laluan</label>
+            <input type="password" class="form-control" name="confirm_password" required placeholder="Masukkan semula kata laluan">
         </div>
-        <button type="submit" class="btn btn-primary w-100">Kemaskini Password</button>
+        <button type="submit" class="btn btn-primary w-100">Kemaskini Kata Laluan</button>
     </form>
 </div>
 
