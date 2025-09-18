@@ -18,7 +18,7 @@ html, body {
     justify-content: center;
     align-items: center;
     height: 100vh; /* penuh skrin */
-    padding: 0; /* buang padding besar */
+    padding: 70px; /* buang padding besar */
 }
 
 
