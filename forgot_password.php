@@ -22,11 +22,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user = $result->fetch_assoc();
         $userId = $user['ID'];
 
-        // Generate token
+        // 🔥 Padam token lama user ini dulu (elak banyak token aktif)
+        $stmtDel = $conn->prepare("DELETE FROM tblpass WHERE IDUSER = ?");
+        $stmtDel->bind_param("i", $userId);
+        $stmtDel->execute();
+
+        // Generate token baru
         $token = bin2hex(random_bytes(32));
         $expire = date("Y-m-d H:i:s", strtotime("+1 hour"));
 
-        // Simpan dalam tblpass
+        // Simpan token baru
         $stmt2 = $conn->prepare("INSERT INTO tblpass (IDUSER, RESET_TOKEN, RESET_EXPIRE) VALUES (?, ?, ?)");
         $stmt2->bind_param("iss", $userId, $token, $expire);
         $stmt2->execute();
