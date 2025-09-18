@@ -33,7 +33,7 @@ function sendTempPassword($toEmail, $temp_pass, $name) {
         $mail->isHTML(true);
         $mail->Subject = 'JPPKK Registration Successful';
         $mail->Body    = "Hello $name,<br><br>
-            ✅ Your temporary password is: <strong>$temp_pass</strong><br>
+            ✅ Your temporary kata laluan is: <strong>$temp_pass</strong><br>
             Please wait for admin confirmation before you can log in.<br><br>
             Regards,<br>JPPKK Team";
 
@@ -166,7 +166,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             Swal.fire({
                 icon: "success",
                 title: "Registration Successful!",
-                html: "✅ Your registration has been sent to your email.<br>Please wait for admin confirmation.<br>Your temporary password is: <strong>'.$temp_pass.'</strong>",
+                html: "✅ Your registration has been sent to your email.<br>Please wait for admin confirmation.<br>Your temporary kata laluan is: <strong>'.$temp_pass.'</strong>",
                 confirmButtonText: "Go to Login"
             }).then(() => { window.location.href="../index.php"; });
         </script>

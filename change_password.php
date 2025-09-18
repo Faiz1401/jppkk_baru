@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 document.addEventListener('DOMContentLoaded', function() {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Password telah dikemaskini',
+                        title: 'Kata laluan telah dikemaskini',
                         text: 'Sila login semula untuk teruskan.',
                         confirmButtonText: 'OK',
                         confirmButtonColor: '#3085d6',
@@ -44,10 +44,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </script>";
             exit();
         } else {
-            $error = "Ralat semasa update password. Sila cuba lagi.";
+            $error = "Ralat semasa update kata laluan. Sila cuba lagi.";
         }
     } else {
-        $error = "Password tidak sama. Sila pastikan kedua-dua padanan betul.";
+        $error = "kata laluan tidak sama. Sila pastikan kedua-dua padanan betul.";
     }
 }
 ?>
@@ -55,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <html lang="ms">
 <head>
     <meta charset="UTF-8">
-    <title>Tukar Password</title>
+    <title>Tukar Kata Laluan</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- SweetAlert2 -->
@@ -66,23 +66,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body class="bg-light d-flex align-items-center justify-content-center vh-100">
 
     <div class="card shadow-lg p-4 border-0 rounded-4" style="max-width: 420px; width: 100%;">
-        <h3 class="text-center mb-4 text-primary">🔒 Tukar Password</h3>
+        <h3 class="text-center mb-4 text-primary">🔒 Tukar Kata Laluan</h3>
         <form method="POST">
             <div class="mb-3">
-                <label class="form-label fw-semibold">Password Baru</label>
+                <label class="form-label fw-semibold">Kata Laluan Baru</label>
                 <div class="input-group">
                     <span class="input-group-text bg-primary text-white">🔑</span>
-                    <input type="password" class="form-control" name="new_password" required placeholder="Masukkan password baru">
+                    <input type="password" class="form-control" name="new_password" required placeholder="Masukkan kata laluan baru">
                 </div>
             </div>
             <div class="mb-3">
-                <label class="form-label fw-semibold">Sahkan Password</label>
+                <label class="form-label fw-semibold">Sahkan Kata Laluan</label>
                 <div class="input-group">
                     <span class="input-group-text bg-primary text-white">✅</span>
-                    <input type="password" class="form-control" name="confirm_password" required placeholder="Sahkan password baru">
+                    <input type="password" class="form-control" name="confirm_password" required placeholder="Sahkan Kata Laluan baru">
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary w-100 mt-2">💾 Update Password</button>
+            <button type="submit" class="btn btn-primary w-100 mt-2">💾 Update Kata Laluan</button>
         </form>
     </div>
 

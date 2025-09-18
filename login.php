@@ -40,7 +40,7 @@ if ($result->num_rows === 1) {
     }
 
     // 3. Password salah
-    $_SESSION['login_error'] = "Password salah!";
+    $_SESSION['login_error'] = "Kata Laluan salah!";
     header("Location: index.php");
     exit();
 
