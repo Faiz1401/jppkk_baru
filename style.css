@@ -105,7 +105,7 @@ body {
 /* Right Side */
 .right-side {
     flex: 1;
-    background: url("images/Background.jpg") no-repeat center center; /* tukar ke gambar background */
+    background: url("images/Background2.jpg") no-repeat center center; /* tukar ke gambar background */
     background-size: cover; /* biar fit penuh */
     display: flex;
     flex-direction: column;

@@ -41,32 +41,38 @@ $conn->close();
       width: 40%;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      justify-content: center;   /* center vertical */
+      align-items: center;       /* center horizontal */
       padding: 50px;
-      color: white;
+      color: black;
       text-align: center;
 
-      /* background image */
-      background: url("images/Background2.jpg") no-repeat center center;
+      background: url("../images/Background2.jpg") no-repeat center center;
       background-size: cover;
       position: relative;
     }
 
+    /* Buang overlay */
     .left-side::before {
-        content: "";
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0,0,0,0.5); /* lapisan gelap */
-        z-index: 1;
+      display: none;
     }
 
-    .left-side h1 {font-size:2.5rem;}
-    .left-side p {font-size:1.2rem;}
-    .left-side a {
-        position: relative;
-        z-index: 2; /* naik atas overlay */
+    /* Logo naik atas */
+    .left-side .logos {
+      position: absolute;
+      top: 20px;        /* jarak sikit dari atas */
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 20px;
     }
+
+    .left-side .logos img {
+      height: 60px;    /* boleh adjust */
+      width: auto;
+    }
+
+
     .right-side {width:60%;padding:50px;background:white;display:flex;flex-direction:column;}
 
     .right-side h2 {font-size:2rem;margin-bottom:20px;grid-column:span 2;}
@@ -171,11 +177,16 @@ $conn->close();
 <body>
     <div class="container">
         <div class="left-side">
+          <div class="logos">
+              <img src="../logo/POLITEKNIK.png" alt="Logo 1">
+              <img src="../logo/JPPKK.png" alt="Logo 2">
+              <img src="../logo/KOLEJ_KOMUNITI.png" alt="Logo 3">
+          </div>
         <h1>Join Us Today</h1>
         <p>Fill out this form to get started with your account.</p>
         <p style="margin-top:20px; font-size:1rem;">
             Already have an account? 
-            <a href="../index2.php" style="color: #fff; font-weight:bold; text-decoration: underline;">
+            <a href="../index2.php" style="color: #2289dc; font-weight:bold; text-decoration: underline;">
                 Sign In
             </a>
         </p>

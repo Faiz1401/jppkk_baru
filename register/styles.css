@@ -22,7 +22,7 @@ body {
 /* Left Side Section (Background Purple) */
 .left-side {
     background-color: #8e44ad;
-    color: white;
+    color: black;
     width: 40%;
     display: flex;
     flex-direction: column;
