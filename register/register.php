@@ -37,9 +37,36 @@ $conn->close();
     body {font-family: Arial, sans-serif;background-color:#f4f4f4;}
 
     .container {display:flex;justify-content:space-between;padding:20px;min-height:100vh;flex-wrap:wrap;}
-    .left-side {background-color:#8e44ad;color:white;width:40%;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:50px;}
+    .left-side {
+      width: 40%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 50px;
+      color: white;
+      text-align: center;
+
+      /* background image */
+      background: url("images/Background2.jpg") no-repeat center center;
+      background-size: cover;
+      position: relative;
+    }
+
+    .left-side::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.5); /* lapisan gelap */
+        z-index: 1;
+    }
+
     .left-side h1 {font-size:2.5rem;}
     .left-side p {font-size:1.2rem;}
+    .left-side a {
+        position: relative;
+        z-index: 2; /* naik atas overlay */
+    }
     .right-side {width:60%;padding:50px;background:white;display:flex;flex-direction:column;}
 
     .right-side h2 {font-size:2rem;margin-bottom:20px;grid-column:span 2;}
@@ -148,7 +175,7 @@ $conn->close();
         <p>Fill out this form to get started with your account.</p>
         <p style="margin-top:20px; font-size:1rem;">
             Already have an account? 
-            <a href="../index.php" style="color: #fff; font-weight:bold; text-decoration: underline;">
+            <a href="../index2.php" style="color: #fff; font-weight:bold; text-decoration: underline;">
                 Sign In
             </a>
         </p>
