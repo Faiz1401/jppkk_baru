@@ -1,0 +1,169 @@
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+/* TOP NAV */
+.topnav {
+  position: relative;
+  z-index: 1500;
+  background-color: #007BFF; /* Biru */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  height: 60px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* Logo kiri */
+.topnav .logo {
+  color: #fff;
+  font-size: 22px;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+/* Kumpulan ikon kanan */
+.topnav .icons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Butang ikon */
+.topnav .icon-btn,
+.topnav .dropbtn {
+  position: relative;
+  color: #f2f2f2;
+  font-size: 18px;
+  padding: 10px 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.topnav .icon-btn:hover,
+.topnav .dropbtn:hover {
+  background-color: rgba(255,255,255,0.2);
+  color: #fff;
+}
+
+/* Badge */
+.badge {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  padding: 2px 6px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+/* Dropdown Profile */
+.topnav .dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.topnav .dropdown-content {
+  display: none;
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background-color: #fff;
+  min-width: 180px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border-radius: 6px;
+  overflow: hidden;
+  animation: fadeIn 0.3s ease;
+}
+
+.topnav .dropdown-content a {
+  color: #333;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  transition: background 0.2s ease;
+}
+
+.topnav .dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.topnav .dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(-5px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+/* NAVBAR BAWAH (KEKAL PUTIH) */
+.navbar {
+  width: 100%;
+  background-color: #fff;
+  display: flex;
+  justify-content: space-around;
+  border-top: 1px solid #eee;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.navbar a {
+  position: relative;
+  padding: 16px 0;
+  color: #333;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  flex-grow: 1;
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+.navbar a:hover {
+  color: #007BFF;
+}
+
+.navbar a.active {
+  color: #007BFF;
+  font-weight: 600;
+}
+
+/* Underline animasi */
+.navbar a::after {
+  content: "";
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 40%;
+  height: 2px;
+  background-color: #007BFF;
+  border-radius: 2px;
+  transition: transform 0.3s ease;
+}
+
+.navbar a:hover::after,
+.navbar a.active::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+/* Responsive */
+@media screen and (max-width: 600px) {
+  .navbar {
+    flex-direction: column;
+  }
+  .navbar a {
+    padding: 12px;
+  }
+}
