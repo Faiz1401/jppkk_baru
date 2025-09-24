@@ -27,7 +27,7 @@ if ($result->num_rows === 1) {
         // Semak status
         if ($user['STATUS'] == 0) {
             $_SESSION['login_error'] = "Akaun anda sedang menunggu pengesahan admin.";
-            header("Location: index2.php");
+            header("Location: index.php");
             exit();
         }
 
@@ -41,13 +41,13 @@ if ($result->num_rows === 1) {
 
     // 3. Password salah
     $_SESSION['login_error'] = "Kata Laluan salah!";
-    header("Location: index2.php");
+    header("Location: index.php");
     exit();
 
 } else {
     // User tak jumpa
     $_SESSION['login_error'] = "User tidak wujud dalam sistem!";
-    header("Location: index2.php");
+    header("Location: index.php");
     exit();
 }
 ?>

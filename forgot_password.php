@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit" class="btn btn-primary w-100">📩 Hantar Link Reset</button>
         <p style="margin-top:20px; font-size:1rem;">
             Kembali ke 
-            <a href="index2.php" style="color: #5157f4ff; font-weight:bold; text-decoration: underline;">
+            <a href="index.php" style="color: #5157f4ff; font-weight:bold; text-decoration: underline;">
                 Log Masuk
             </a>
         </p>

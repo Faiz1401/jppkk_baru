@@ -186,7 +186,7 @@ $conn->close();
         <p>Fill out this form to get started with your account.</p>
         <p style="margin-top:20px; font-size:1rem;">
             Already have an account? 
-            <a href="../index2.php" style="color: #2289dc; font-weight:bold; text-decoration: underline;">
+            <a href="../index.php" style="color: #2289dc; font-weight:bold; text-decoration: underline;">
                 Sign In
             </a>
         </p>
@@ -250,10 +250,10 @@ $conn->close();
                     <div class="gender">
                         <label>Jantina</label>
                         <div>
-                            <input type="radio" id="male" name="gender" value="Male" required>
-                            <label for="male">Lelaki</label>
-                            <input type="radio" id="female" name="gender" value="Female" required>
-                            <label for="female">Perempuan</label>
+                            <input type="radio" id="lelaki" name="gender" value="Lelaki" required>
+                            <label for="lelaki">Lelaki</label>
+                            <input type="radio" id="perempuan" name="gender" value="Perempuan" required>
+                            <label for="perempuan">Perempuan</label>
                         </div>
                     </div>
                 </div>

@@ -6,90 +6,80 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Log In</title>
+    <link rel="stylesheet" href="style.css">
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-    <div class="container">
-        <!-- Left side -->
-        <div class="left-side">
-            <h1 >Selamat Datang!</h1></br>
-            <p style="font-size:1rem;">Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown 
-                printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, 
-                but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with 
-                the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus 
-                PageMaker including versions of Lorem Ipsum.</p>
-            <p style="margin-top:20px; font-size:1rem;">
-                Pengguna baru ? 
-                <a href="register/register.php" style="color: #fff; font-weight:bold; text-decoration: underline;">
-                    Daftar sini
-                </a>
-            </p>
-        </div>
+<div class="container">
+    <!-- Left Side -->
+    <div class="left-side">
+        <h2>Log Masuk</h2>
+        <p><strong>Selamat kembali !</strong> Sila masukkan butiran anda</p>
 
-        <!-- Right side -->
-        <div class="right-side">
-            <h2>Log Masuk</h2>
-                <?php
-                    if (isset($_SESSION['error'])) {
-                        echo "<div class='alert alert-danger'>" . $_SESSION['error'] . "</div>";
-                        unset($_SESSION['error']);
-                    }
-                    if (isset($_SESSION['success'])) {
-                        echo "<div class='alert alert-success'>" . $_SESSION['success'] . "</div>";
-                        unset($_SESSION['success']);
-                    }
-                ?>
-            <!-- Login Form -->
+        <!-- Form ditolak ke bawah sikit -->
+        <div class="form-wrapper">
             <form action="login.php" method="POST" onsubmit="return validateLoginForm()">
                 <label for="username">Kad Pengenalan</label>
-                <input type="text" id="username" name="username">
+                <input type="text" id="username" name="username" placeholder="Kad Pengenalan (tanpa -)">
 
                 <label for="password">Kata Laluan</label>
-                <input type="password" id="password" name="password">
+                <div class="password-box">
+                    <input type="password" id="password" name="password" placeholder="Masukkan Kata Laluan">
+                </div>
 
-                <a href="forgot_password.php">Lupa Kata Laluan ?</a>
-                <button type="submit">Log Masuk</button>
+                <p class="forgot"><a href="forgot_password.php">Lupa Kata Laluan ?</a>
+                <button type="submit" class="btn">Log Masuk</button>
             </form>
+
+            <p class="signup">Pengguna baru ? <a href="register/register.php">Daftar sini</a></p>
         </div>
     </div>
 
-    <script>
-        function validateLoginForm() {
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value.trim();
+    <!-- Right Side -->
+    <div class="right-side">
+        <div class="logos">
+            <img src="logo/POLITEKNIK.png" alt="Logo 1">
+            <img src="logo/JPPKK.png" alt="Logo 2">
+            <img src="logo/KOLEJ_KOMUNITI.png" alt="Logo 3">
+        </div>
+        <p class="tagline">Sistem Komuniti Penduduk <br> Bersama Kita Lebih Baik</p>
+    </div>
+</div>
 
-            if (!username && !password) {
-                showErrorBox("Sila masukkan IC Number dan Kata Laluan.");
-                return false;
-            } else if (!username) {
-                showErrorBox("Sila masukkan IC Number.");
-                return false;
-            } else if (!password) {
-                showErrorBox("Sila masukkan Kata Laluan.");
-                return false;
-            }
-            return true;
-        }
+<script>
+    function validateLoginForm() {
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
 
-        function showErrorBox(message) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Login Error',
-                text: message,
-                confirmButtonColor: '#d33'
-            });
+        if (!username && !password) {
+            showErrorBox("Sila masukkan IC Number dan Kata Laluan.");
+            return false;
+        } else if (!username) {
+            showErrorBox("Sila masukkan IC Number.");
+            return false;
+        } else if (!password) {
+            showErrorBox("Sila masukkan Kata Laluan.");
+            return false;
         }
-    </script>
+        return true;
+    }
+
+    function showErrorBox(message) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Login Error',
+            text: message,
+            confirmButtonColor: '#d33'
+        });
+    }
+</script>
 
 <?php
 if (isset($_SESSION['login_error'])) {
     $msg = $_SESSION['login_error'];
 
-    // Kalau mesej khas "menunggu pengesahan"
     if ($msg === "Akaun anda sedang menunggu pengesahan admin.") {
         echo "<script>
             Swal.fire({
@@ -100,7 +90,6 @@ if (isset($_SESSION['login_error'])) {
             });
         </script>";
     } else {
-        // Default (error)
         echo "<script>
             Swal.fire({
                 icon: 'error',
@@ -110,10 +99,8 @@ if (isset($_SESSION['login_error'])) {
             });
         </script>";
     }
-
     unset($_SESSION['login_error']);
 }
 ?>
-
 </body>
 </html>

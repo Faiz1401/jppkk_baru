@@ -128,8 +128,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <script>
             Swal.fire({
                 icon: "error",
-                title: "Duplicate IC",
-                text: "⚠ This IC number is already registered!"
+                title: "Kad Pengenalan",
+                text: "⚠ Kad Pegenalan telah didaftarkan!"
             }).then(() => { window.history.back(); });
         </script>
         </body>
