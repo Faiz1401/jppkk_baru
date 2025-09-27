@@ -1,26 +1,42 @@
 <?php
-$conn = new mysqli("localhost", "root", "", "jppkk_test");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+session_start();
+include '../db_connection.php';
+
+// Pastikan user login
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
 }
 
-$id = $_GET['id'] ?? 0;
+$user_id = $_SESSION['user_id'];
 
+// Dapatkan nama fail dari DB
 $stmt = $conn->prepare("SELECT BUKTI_PENGESAHAN FROM tbluser WHERE ID = ?");
-$stmt->bind_param("i", $id);
+$stmt->bind_param("i", $user_id);
 $stmt->execute();
-$stmt->store_result();
-$stmt->bind_result($fileData);
+$stmt->bind_result($filename);
 $stmt->fetch();
-
-if ($fileData) {
-    header("Content-Type: application/pdf");
-    header("Content-Disposition: attachment; filename=bukti_$id.pdf");
-    echo $fileData;
-} else {
-    echo "Fail tidak dijumpai!";
-}
-
 $stmt->close();
-$conn->close();
-?>
+
+if ($filename) {
+    $file_path = "../uploads/" . $filename;
+echo "Nama fail dalam DB: " . $filename . "<br>";
+echo "Path penuh: " . realpath($file_path) . "<br>";
+
+    if (file_exists($file_path)) {
+        // Set header untuk download
+        header("Content-Description: File Transfer");
+        header("Content-Type: application/octet-stream");
+        header("Content-Disposition: attachment; filename=\"" . basename($file_path) . "\"");
+        header("Expires: 0");
+        header("Cache-Control: must-revalidate");
+        header("Pragma: public");
+        header("Content-Length: " . filesize($file_path));
+        readfile($file_path);
+        exit;
+    } else {
+        echo "❌ Fail tidak dijumpai di server.";
+    }
+} else {
+    echo "❌ Tiada fail untuk user ini.";
+}

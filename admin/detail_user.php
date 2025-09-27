@@ -192,20 +192,13 @@ if (!$user) {
         </div>
         <div class="detail-item"><label>Bukti Pengesahan</label>
             <?php if (!empty($user['BUKTI_PENGESAHAN'])): ?>
-                <?php 
-                $base64 = base64_encode($user['BUKTI_PENGESAHAN']);
-                ?>
-                <!-- Preview PDF -->
-                <iframe src="data:application/pdf;base64,<?= $base64 ?>" 
-                        width="100%" height="400px" 
-                        style="border:1px solid #ccc; border-radius:8px;"></iframe>
-
+                <?php $base64 = base64_encode($user['BUKTI_PENGESAHAN']); ?>
+                <iframe src="data:application/pdf;base64,<?= $base64 ?>"
+                        width="100%" height="400px"
+                        style="border:1px solid #ccc; border-radius:8px;">
+                </iframe>
                 <br><br>
-                <a href="download.php?id=<?= $user['ID'] ?>" 
-                class="btn-back" 
-                style="background:#27ae60; padding:8px 16px; font-size:14px;">
-                <i class="fa fa-download"></i> Muat Turun
-                </a>
+                    <a href="download.php" class="btn btn-primary">⬇️ Muat Turun Bukti Saya</a>
             <?php else: ?>
                 <input type="text" value="Tiada dokumen" readonly>
             <?php endif; ?>
