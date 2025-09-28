@@ -10,10 +10,13 @@ $id = $_GET['id'] ?? 0;
 
 // Ambil detail user + gred sekali
 $stmt = $conn->prepare("
-    SELECT u.*, g.GRED AS NAMA_GRED
+    SELECT u.*, g.GRED AS NAMA_GRED, 
+        p.KODPROGRAM, p.NAMAPROGRAM
     FROM tbluser u
     LEFT JOIN tblgred g ON u.GRED_ID = g.IDGRED
+    LEFT JOIN tblprogram p ON u.PROGRAM = p.KODPROGRAM
     WHERE u.ID = ?
+
 ");
 $stmt->bind_param("i", $id);
 $stmt->execute();
@@ -174,7 +177,7 @@ if (!$user) {
             <input type="text" value="<?= htmlspecialchars($user['JABATAN_UNIT'] ?? '') ?>" readonly>
         </div>
         <div class="detail-item"><label>Program</label>
-            <input type="text" value="<?= htmlspecialchars($user['PROGRAM'] ?? '') ?>" readonly>
+            <textarea readonly><?= htmlspecialchars(($user['KODPROGRAM'] ?? '') . ' - ' . ($user['NAMAPROGRAM'] ?? '')) ?></textarea>
         </div>
         <div class="detail-item"><label>Tarikh Pencen</label>
             <input type="text" value="<?= htmlspecialchars($user['TARIKH_PENCEN'] ?? '') ?>" readonly>
@@ -208,9 +211,33 @@ if (!$user) {
         </div>
     </div>
 
-    <a href="user-maintenance.php" class="btn-back"><i class="fa fa-arrow-left"></i> Kembali</a>
+    <!-- Butang Action -->
+    <div style="margin-top: 30px; display:flex; justify-content:space-between; align-items:center;">
+        
+        <!-- Kiri: Update & Delete -->
+        <div>
+            <a href="update_user.php?id=<?= $user['ID'] ?>" 
+               class="btn-back" 
+               style="background:#27ae60; margin-right:10px;">
+               <i class="fa fa-edit"></i> Kemaskini
+            </a>
+            
+            <a href="delete_user.php?id=<?= $user['ID'] ?>" 
+               class="btn-back" 
+               style="background:#e74c3c;"
+               onclick="return confirm('Anda pasti mahu padam user ini?');">
+               <i class="fa fa-trash"></i> Padam
+            </a>
+        </div>
+        
+        <!-- Kanan: Kembali -->
+        <div>
+            <a href="user-maintenance.php" class="btn-back">
+                <i class="fa fa-arrow-left"></i> Kembali
+            </a>
+        </div>
+    </div>
 </div>
-
 </body>
 </html>
 <?php $conn->close(); ?>

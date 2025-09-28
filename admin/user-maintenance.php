@@ -1,4 +1,17 @@
 <?php
+session_start();
+
+// Kalau user belum login → tendang ke index/login
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../index.php");
+    exit();
+}
+
+// Kawalan cache supaya page tak boleh back lepas logout
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
 // Sambung ke DB
 $conn = new mysqli("localhost", "root", "", "jppkk_test");
 if ($conn->connect_error) {
@@ -12,27 +25,38 @@ $noUser = false; // Flag utk detect tiada user
 
 if (isset($_GET['search'])) {
     $search = $_GET['search'];
-    $stmt = $conn->prepare("SELECT ID, NAMA, EMAIL, NO_IC, PHONE, STATUS 
-                            FROM tbluser 
-                            WHERE NAMA LIKE ? OR NO_IC LIKE ?
-                            ORDER BY ID DESC");
-    $like = "%" . $search . "%";
+    $stmt = $conn->prepare("SELECT u.ID, u.NAMA, u.EMAIL, u.NO_IC, u.PHONE, u.STATUS, 
+                                    u.IDJAWATAN, j.NAMA_JAWATAN
+                             FROM tbluser u
+                             LEFT JOIN tbljawatan j ON u.IDJAWATAN = j.IDJAWATAN
+                             WHERE u.NAMA LIKE ? OR u.NO_IC LIKE ?
+                             ORDER BY u.ID DESC");
+    $like = "%".$search."%";
     $stmt->bind_param("ss", $like, $like);
     $stmt->execute();
     $result = $stmt->get_result();
-
-    if ($result->num_rows === 0) {
-        $noUser = true; // Trigger alert
-    }
+    if ($result->num_rows === 0) $noUser = true;
 } else {
-    $result = $conn->query("SELECT ID, NAMA, EMAIL, NO_IC, PHONE, STATUS 
-                            FROM tbluser ORDER BY ID DESC");
+    $result = $conn->query("SELECT u.ID, u.NAMA, u.EMAIL, u.NO_IC, u.PHONE, u.STATUS, 
+                                   u.IDJAWATAN, j.NAMA_JAWATAN
+                            FROM tbluser u
+                            LEFT JOIN tbljawatan j ON u.IDJAWATAN = j.IDJAWATAN
+                            ORDER BY u.ID DESC");
 }
+
+// Senarai jawatan untuk dropdown
+$jawatanRes = $conn->query("SELECT IDJAWATAN, NAMA_JAWATAN FROM tbljawatan");
+$jawatanList = [];
+while($j = $jawatanRes->fetch_assoc()){ $jawatanList[]=$j; }
 ?>
 <!DOCTYPE html>
 <html lang="ms">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
     <title>User Maintenance</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -186,7 +210,7 @@ if (isset($_GET['search'])) {
           <div class="dropdown-content">
             <a href="#profile"><i class="fa fa-user"></i> Profile</a>
             <a href="#settings"><i class="fa fa-cog"></i> Settings</a>
-            <a href="#logout"><i class="fa fa-sign-out-alt"></i> Logout</a>
+            <a href="logout.php"><i class="fa fa-sign-out-alt"></i> Logout</a>
           </div>
         </div>
       </div>
