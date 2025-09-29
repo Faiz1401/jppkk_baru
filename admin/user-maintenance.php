@@ -217,14 +217,11 @@ while($j = $jawatanRes->fetch_assoc()){ $jawatanList[]=$j; }
     </div>
 
 <div class="navbar">
-    <a href="index.php"><i class="fa fa-fw fa-home"></i> Home</a> 
-    <a href="#"><i class="fa fa-fw fa-search"></i> Search</a> 
+    <a href="index.php"><i class="fa fa-fw fa-home"></i> Dashboard</a> 
+    <a href="bengkel.php"><i class="fa-solid fa-calendar"></i> Bengkel</a> 
     <a href="#"><i class="fa fa-fw fa-envelope"></i> Contact</a> 
     <a href="#"><i class="fa fa-fw fa-user"></i> Login</a>
     <a href="#"><i class="fa fa-fw fa-search"></i> Search</a> 
-    <a href="#"><i class="fa fa-fw fa-envelope"></i> Contact</a> 
-    <a href="#"><i class="fa fa-fw fa-envelope"></i> Contact</a> 
-    <a href="#"><i class="fa fa-fw fa-user"></i> Login</a>
     <a href="#"><i class="fa fa-fw fa-search"></i> Search</a> 
     <a href="#"><i class="fa fa-fw fa-envelope"></i> Contact</a> 
     <a class="active" href="user-maintenance.php"><i class="fa fa-fw fa-user"></i> Akuan</a>

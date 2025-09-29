@@ -107,14 +107,11 @@ $conn->close();
 </div>
 
 <div class="navbar">
-    <a class="active" href="index.php"><i class="fa fa-fw fa-home"></i> Home</a> 
-    <a href="#"><i class="fa fa-fw fa-search"></i> Search</a> 
+    <a class="active" href="index.php"><i class="fa fa-fw fa-home"></i> Dashboard</a> 
+    <a href="bengkel.php"><i class="fa-solid fa-calendar"></i> Bengkel</a> 
     <a href="#"><i class="fa fa-fw fa-envelope"></i> Contact</a> 
     <a href="#"><i class="fa fa-fw fa-user"></i> Login</a>
     <a href="#"><i class="fa fa-fw fa-search"></i> Search</a> 
-    <a href="#"><i class="fa fa-fw fa-envelope"></i> Contact</a> 
-    <a href="#"><i class="fa fa-fw fa-envelope"></i> Contact</a> 
-    <a href="#"><i class="fa fa-fw fa-user"></i> Login</a>
     <a href="#"><i class="fa fa-fw fa-search"></i> Search</a> 
     <a href="#"><i class="fa fa-fw fa-envelope"></i> Contact</a> 
     <a href="user-maintenance.php"><i class="fa fa-fw fa-user"></i> Akuan</a>

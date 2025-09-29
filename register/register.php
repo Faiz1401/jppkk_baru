@@ -15,6 +15,21 @@ $conn->close();
 <?php
 include 'db_connection.php';
 
+$institusiOptions = [];
+$sql = "SELECT IDINSTITUSI, NAMA_INSTITUSI FROM tblinstitusi";
+$result = $conn->query($sql);
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $institusiOptions[] = $row;
+    }
+}
+$conn->close();
+?>
+
+
+<?php
+include 'db_connection.php';
+
 // ambil data bidang
 $bidangOptions = [];
 $sql = "SELECT IDBIDANGBK, NAMABIDANGBK FROM tblbidang";
@@ -266,8 +281,13 @@ $conn->close();
             <div class="form-step">
                 <h2>Step 2: Academic / Institution Information</h2>
                 <div class="input-group">
-                    <label for="institusi">Institution</label>
-                    <input type="text" id="institusi" name="institusi" placeholder="Enter your institution" required>
+                    <label for="institusi">Institusi</label>
+                    <select id="institusi" name="institusi" required>
+                        <option value="">-- Pilih Institusi --</option>
+                        <?php foreach($institusiOptions as $i): ?>
+                            <option value="<?= $i['IDINSTITUSI'] ?>"><?= $i['NAMA_INSTITUSI'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
                 <div class="input-group full-width">
                     <label for="alamatInstitusi">Alamat Institusi</label>
