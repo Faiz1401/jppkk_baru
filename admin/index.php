@@ -107,15 +107,32 @@ $conn->close();
 </div>
 
 <div class="navbar">
-    <a class="active" href="index.php"><i class="fa fa-fw fa-home"></i> Dashboard</a> 
-    <a href="bengkel.php"><i class="fa-solid fa-calendar"></i> Bengkel</a> 
-    <a href="#"><i class="fa fa-fw fa-envelope"></i> Contact</a> 
-    <a href="#"><i class="fa fa-fw fa-user"></i> Login</a>
-    <a href="#"><i class="fa fa-fw fa-search"></i> Search</a> 
-    <a href="#"><i class="fa fa-fw fa-search"></i> Search</a> 
-    <a href="#"><i class="fa fa-fw fa-envelope"></i> Contact</a> 
+  <a class="active" href="index.php"><i class="fa fa-fw fa-home"></i> Dashboard</a> 
+  <a href="bengkel.php"><i class="fa-solid fa-calendar"></i> Bengkel</a> 
+
+  <!-- Dropdown Menu -->
+  <div class="dropdown">
+    <button class="dropbtn"><i class="fa fa-bars"></i> Senarai <i class="fa fa-caret-down"></i></button>
+    <div class="dropdown-content">
+      <a class="active" href="penggubal.php"><i class="fa fa-fw fa-user"></i> Ketua Penggubal</a>
+      <a href="urusetia.php"><i class="fa fa-fw fa-user"></i> Urusetia</a>
+      <a href="#"><i class="fa fa-fw fa-user"></i> Ahli JK3P2K</a>
+    </div>
+  </div> 
+    <div class="dropdown">
+        <button class="dropbtn"><i class="fa fa-bars"></i> program <i class="fa fa-caret-down"></i></button>
+        <div class="dropdown-content">
+            <a class="active" href="program.php"><i class="fa fa-fw fa-user"></i> Senarai Program</a>
+            <a href="tambah_program.php"><i class="fa fa-fw fa-user"></i> Program Baru</a>
+            <a href="sah_program"><i class="fa fa-fw fa-user"></i> Sah Program</a>
+        </div>
+  </div> 
+    <a href="#"><i class="fa-solid fa-check-to-slot"></i> Permohonan</a>
+    <a href="#"><i class="fa-solid fa-circle-exclamation"></i> Hebahan</a> 
     <a href="user-maintenance.php"><i class="fa fa-fw fa-user"></i> Akuan</a>
 </div>
+
+
 
 <!-- Dashboard Cards -->
 <div class="dashboard">

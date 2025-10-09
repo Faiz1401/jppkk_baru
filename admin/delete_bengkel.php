@@ -1,28 +1,27 @@
 <?php
-include '../db_connection.php'; 
+session_start();
+include '../db_connection.php';
 
 if (isset($_GET['delete'])) {
-    $id = intval($_GET['delete']);
-    $stmt = $conn->prepare("DELETE FROM tblbengkel WHERE IDBENGKEL = ?");
-    $stmt->bind_param("i", $id);
+    $idToDelete = intval($_GET['delete']);
 
-    if ($stmt->execute()) {
-        echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
-        <script>
-          Swal.fire({icon:'success',title:'Berjaya!',text:'Bengkel berjaya dipadam!'})
-          .then(()=>{ window.location='bengkel.php'; });
-        </script>";
+    $stmt = $conn->prepare("DELETE FROM tblbengkel WHERE IDBENGKEL = ?");
+    if ($stmt) {
+        $stmt->bind_param("i", $idToDelete);
+        if ($stmt->execute()) {
+            $_SESSION['msg'] = "Bengkel berjaya dipadam!";
+        } else {
+            $_SESSION['msg'] = "Ralat padam: " . $stmt->error;
+        }
+        $stmt->close();
     } else {
-        echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
-        <script>
-          Swal.fire({icon:'error',title:'Ralat!',text:'Ralat padam: " . addslashes($stmt->error) . "'})
-          .then(()=>{ window.location='bengkel.php'; });
-        </script>";
+        $_SESSION['msg'] = "Ralat SQL: " . $conn->error;
     }
-    $stmt->close();
+
+    header("Location: bengkel.php");
+    exit;
 } else {
+    $_SESSION['msg'] = "Tiada ID bengkel dipilih.";
     header("Location: bengkel.php");
     exit;
 }
-$conn->close();
-?>

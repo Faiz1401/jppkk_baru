@@ -5,7 +5,9 @@ body {
   color: #333;
 }
 
+/* ===================== */
 /* TOP NAV */
+/* ===================== */
 .topnav {
   position: relative;
   z-index: 1500;
@@ -18,7 +20,6 @@ body {
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
-/* Logo kiri */
 .topnav .logo {
   color: #fff;
   font-size: 22px;
@@ -27,14 +28,12 @@ body {
   letter-spacing: 1px;
 }
 
-/* Kumpulan ikon kanan */
 .topnav .icons {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-/* Butang ikon */
 .topnav .icon-btn,
 .topnav .dropbtn {
   position: relative;
@@ -54,7 +53,6 @@ body {
   color: #fff;
 }
 
-/* Badge */
 .badge {
   position: absolute;
   top: 6px;
@@ -102,13 +100,14 @@ body {
   display: block;
 }
 
-/* Animation */
 @keyframes fadeIn {
   from {opacity: 0; transform: translateY(-5px);}
   to {opacity: 1; transform: translateY(0);}
 }
 
-/* NAVBAR BAWAH (KEKAL PUTIH) */
+/* ===================== */
+/* NAVBAR BAWAH */
+/* ===================== */
 .navbar {
   width: 100%;
   background-color: #fff;
@@ -118,7 +117,8 @@ body {
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.navbar a {
+.navbar a,
+.navbar .dropbtn {
   position: relative;
   padding: 16px 0;
   color: #333;
@@ -128,9 +128,13 @@ body {
   flex-grow: 1;
   text-align: center;
   transition: color 0.3s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
-.navbar a:hover {
+.navbar a:hover,
+.navbar .dropbtn:hover {
   color: #007BFF;
 }
 
@@ -139,8 +143,8 @@ body {
   font-weight: 600;
 }
 
-/* Underline animasi */
-.navbar a::after {
+.navbar a::after,
+.navbar .dropbtn::after {
   content: "";
   position: absolute;
   bottom: 8px;
@@ -154,8 +158,45 @@ body {
 }
 
 .navbar a:hover::after,
-.navbar a.active::after {
+.navbar a.active::after,
+.navbar .dropbtn:hover::after {
   transform: translateX(-50%) scaleX(1);
+}
+
+/* Dropdown dalam navbar */
+.navbar .dropdown {
+  position: relative;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.navbar .dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%; /* ikut lebar parent */
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border-radius: 0 0 6px 6px;
+  z-index: 1000;
+}
+
+.navbar .dropdown-content a {
+  padding: 12px;
+  text-align: left;
+  display: block;
+  color: #333;
+  font-size: 15px;
+}
+
+.navbar .dropdown-content a:hover {
+  background-color: #f5f5f5;
+  color: #007BFF;
+}
+
+.navbar .dropdown:hover .dropdown-content {
+  display: block;
 }
 
 /* Responsive */
@@ -163,7 +204,13 @@ body {
   .navbar {
     flex-direction: column;
   }
-  .navbar a {
+  .navbar a,
+  .navbar .dropbtn {
     padding: 12px;
+  }
+  .navbar .dropdown-content {
+    position: static;
+    width: 100%;
+    box-shadow: none;
   }
 }

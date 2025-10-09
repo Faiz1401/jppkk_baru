@@ -44,7 +44,8 @@ session_start();
             <img src="logo/JPPKK.png" alt="Logo 2">
             <img src="logo/KOLEJ_KOMUNITI.png" alt="Logo 3">
         </div>
-        <p class="tagline">Sistem Komuniti Penduduk <br> Bersama Kita Lebih Baik</p>
+        <p class="tagline">Sistem Ahli Jawatankuasa Kecil Program
+Pengajian Politknik Dan Kolej Komuniti <br> (JK3P2K) <br><br> Bersama Kita Lebih Baik</p>
     </div>
 </div>
 
